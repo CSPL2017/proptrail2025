@@ -126,6 +126,100 @@ const Header = () => {
                 </nav>
             </div>
         </header>
+        <div className="modal fade" id="modalLogin">
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                    <div className="flat-account bg-surface">
+                        <h3 className="title text-center">Log In</h3>
+                        <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                        <form action="#">
+                            <fieldset className="box-fieldset">
+                                <label for="name">Your Names<span>*</span>:</label>
+                                <input type="text" className="form-contact style-1" value="themesflat@gmail.com|" />
+                            </fieldset>
+                            <fieldset className="box-fieldset">
+                                <label for="pass">Password<span>*</span>:</label>
+                                <div className="box-password">
+                                    <input type="password" className="form-contact style-1 password-field" placeholder="Password" />
+                                    <span className="show-pass">
+                                        <i className="icon-pass icon-eye"></i>
+                                        <i className="icon-pass icon-eye-off"></i>
+                                    </span>
+                                </div>
+                            </fieldset>
+                            <div className="d-flex justify-content-between flex-wrap gap-12">
+                                <fieldset className="d-flex align-items-center gap-6">
+                                    <input type="checkbox" className="tf-checkbox style-2" id="cb1" />
+                                    <label for="cb1" className="caption-1 text-variant-1">Remember me</label>
+                                </fieldset>
+                                <a href="#" className="caption-1 text-primary">Forgot password?</a>
+                            </div>
+                            <div className="text-variant-1 auth-line">or sign up with</div>
+                            <div className="login-social">
+                                <a href="#" className="btn-login-social">
+                                    <img src="images/logo/fb.jpg" alt="img" />
+                                    Continue with Facebook
+                                </a>
+                                <a href="#" className="btn-login-social">
+                                    <img src="images/logo/google.jpg" alt="img" />
+                                    Continue with Google
+                                </a>
+                                <a href="#" className="btn-login-social">
+                                    <img src="images/logo/tw.jpg" alt="img" />
+                                    Continue with Twitter
+                                </a>
+                            </div>
+                            <button type="submit" className="tf-btn primary w-100">Login</button>
+                            <div className="mt-12 text-variant-1 text-center noti">Not registered yet?<a href="#modalRegister" data-bs-toggle="modal" className="text-black fw-5">Sign Up</a> </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/* popup register  */}
+        <div className="modal fade" id="modalRegister">
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                    <div className="flat-account bg-surface">
+                        <h3 className="title text-center">Register</h3>
+                        <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                        <form action="#">
+                            <fieldset className="box-fieldset">
+                                <label for="name">Username or email address<span>*</span>:</label>
+                                <input type="text" className="form-contact style-1" value="themesflat@gmail.com|" />
+                            </fieldset>
+                            <fieldset className="box-fieldset">
+                                <label for="pass">Password<span>*</span>:</label>
+                                <div className="box-password">
+                                    <input type="password" className="form-contact style-1 password-field" placeholder="Password" />
+                                    <span className="show-pass">
+                                        <i className="icon-pass icon-eye"></i>
+                                        <i className="icon-pass icon-eye-off"></i>
+                                    </span>
+                                </div>
+                            </fieldset>
+                            <fieldset className="box-fieldset">
+                                <label for="confirm">Confirm Password<span>*</span>:</label>
+                                <div className="box-password">
+                                    <input type="password" className="form-contact style-1 password-field2" placeholder="Password" />
+                                    <span className="show-pass2">
+                                        <i className="icon-pass icon-eye"></i>
+                                        <i className="icon-pass icon-eye-off"></i>
+                                    </span>
+                                </div>
+                            </fieldset>
+                            <fieldset className="d-flex align-items-center gap-6">
+                                <input type="checkbox" className="tf-checkbox style-2" id="cb1" />
+                                <label for="cb1" className="caption-1 text-variant-1">I agree to the <span className="fw-5 text-black">Terms of User</span></label>
+                            </fieldset>
+
+                            <button type="submit" className="tf-btn primary w-100">Register</button>
+                            <div className="mt-12 text-variant-1 text-center noti">Already have an account?<a href="#modalLogin" data-bs-toggle="modal" className="text-black fw-5">Login Here</a> </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </>)
 }
 
