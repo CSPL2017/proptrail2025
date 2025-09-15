@@ -5,9 +5,8 @@ import { useForm, } from "react-hook-form"
 // import { GoogleLogin } from "@react-oauth/google";
 import { toast } from 'react-toastify';
 import { showToast } from "../utils/toast";
-const LoginModal = ({ id='', type }) => {
+const LoginModal = ({ id = '', type }) => {
     let apiServices = new ApiService()
-
     const {
         register,
         handleSubmit,
@@ -18,23 +17,20 @@ const LoginModal = ({ id='', type }) => {
     const [step, setStep] = useState(1)
     const [otp, setOtp] = useState('');
     const [showloader, setshowloader] = useState(false);
-    const [showgoogleloader, setshowgoogleloader] = useState(false);
     const [userid, setuserid] = useState("")
     const userEmail = watch("verify_user_email")
     const useraddress = watch("user_regisaddress")
     const username = watch("user_registname")
     const userdob = watch("user_regisdob")
     const usermobilenumber = watch("user_registmobileno")
-    const [errormsg, setErrorMessage] = useState("");
-    const [successmsg, setSuccessMessage] = useState("");
     const [resendTimer, setResendTimer] = useState(30);
-
 
     const onSubmitregister = (data) => {
         if (data.user_registepassword !== data.user_resgisCpassword) {
-            setErrorMessage("Confirm Password not match with Password")
+            showToast("error", "Confirm Password not match with Password")
             return
         }
+        setshowloader(true)
         const dataString = {
             user_name: username,
             user_mobileno: usermobilenumber,
@@ -49,28 +45,20 @@ const LoginModal = ({ id='', type }) => {
             if (res.data.status == "success") {
                 let token = res?.data?.token
                 localStorage.setItem("USER_TOKEN", token)
-                setSuccessMessage(res?.data?.message)
+                showToast("success", res.data.message)
                 setshowloader(false)
                 if (id) {
                     window.location.reload()
                 } else {
                     window.location.href = '/dashboard'
                 }
-                // setTimeout(() => {
-                //     setshowlogin(false);
-                // }, [2000])
             } else {
-                const errormsg = res?.data?.message;
-                setErrorMessage(errormsg)
+                showToast("error", res.data.message)
                 setshowloader(false)
-                // setTimeout(() => {
-                //     setshowlogin(false);
-                // }, [3000])
             }
+        }).catch((error) => {
+            setshowloader(false)
         })
-            .catch((error) => {
-                setshowloader(false)
-            })
     }
 
 
@@ -107,14 +95,12 @@ const LoginModal = ({ id='', type }) => {
 
     const gotoregister = (type) => {
         if (type == 'forget') {
-            setErrorMessage('')
             setStep(6)
             setValue('forget_user_email', '')
             setOtp('')
 
         }
         else {
-            setErrorMessage('')
             setStep(2)
             setValue("user_email", "")
             setValue('verify_user_email', ' ')
@@ -136,31 +122,29 @@ const LoginModal = ({ id='', type }) => {
             property_id: id !== null && id !== '' ? id : ''
         }
         apiServices.getuserlogin(dataString).then((res) => {
-            console.log('res',res);
-            
             if (res.data.status == "success") {
                 let token = res?.data?.token
                 localStorage.setItem("USER_TOKEN", token);
                 setshowloader(false)
-                /* if (id) {
+                if (id) {
                     window.location.reload()
                 } else {
                     window.location.href = '/dashboard'
-                } */
+                }
             } else {
                 setshowloader(false)
-                showToast('error',res.data.message) 
+                showToast("error", res.data.message)
             }
         }).catch(() => { })
 
     }
 
     const onSubmitverifyotp = (data) => {
-
         if (otp == "") {
-            setErrorMessage("Otp is required")
+            showToast("error", "Otp is required")
             return
         }
+
         setshowloader(true)
         const dataString = {
             user_otp: otp,
@@ -170,33 +154,21 @@ const LoginModal = ({ id='', type }) => {
         apiServices.gettoverifyotp(dataString).then((res) => {
             if (res.data.status == "success") {
                 setuserid(res?.data?.id)
-                setSuccessMessage(res?.data?.message)
-                setTimeout(() => {
-                    setshowloader(false)
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                    setStep(4)
-
-                }, 1000)
-
-            } else {
-                const errormsg = res?.data?.message;
-                setErrorMessage(errormsg)
+                showToast("success", res.data.message)
                 setshowloader(false)
-                setTimeout(() => {
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                }, 1000)
+                setStep(4)
+            } else {
+                showToast("error", res.data.message)
+                setshowloader(false)
             }
         }).catch((error) => { })
 
     }
 
     const onSubmitsendotp = (data) => {
-
         const checkemailpattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data?.verify_user_email)
         if (!checkemailpattern) {
-            setErrorMessage("Email is not correct")
+            showToast("error", "Email is not correct")
             return
         }
         else {
@@ -208,57 +180,33 @@ const LoginModal = ({ id='', type }) => {
             apiServices.gettosendotp(dataString).then((res) => {
                 if (res.data.status == "success") {
                     setuserid(res?.data?.id)
-                    setSuccessMessage(res?.data?.message)
+                    showToast("success", res.data.message)
                     setshowloader(false)
-
-                    setTimeout(() => {
-                        setErrorMessage('')
-                        setSuccessMessage('')
-                        setStep(3)
-                        setResendTimer(30);
-                    }, 1000)
+                    setStep(3)
+                    setResendTimer(30);
                 } else {
-                    const errormsg = res?.data?.message;
-                    setErrorMessage(errormsg)
+                    showToast("error", res.data.message)
                     setshowloader(false)
-                    setTimeout(() => {
-                        setErrorMessage('')
-                        setSuccessMessage('')
-                    }, 1000)
                 }
             }).catch((error) => {
 
             })
-
         }
     }
 
     const resendOTP = () => {
-        setErrorMessage('')
-        setSuccessMessage('')
         setResendTimer(30);
-
         const dataString = {
             user_id: userid
         }
-
         apiServices.getresendotp(dataString).then((res) => {
             if (res.data.status == "success") {
-                setSuccessMessage(res?.data?.message)
+                showToast("success", res.data.message)
                 setuserid(res?.data?.id)
-
             } else {
-
-                const errormsg = res?.data?.message;
-                setErrorMessage(errormsg)
-                setTimeout(() => {
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                }, 1000)
-
+                showToast("error", res.data.message)
             }
         }).catch(() => { })
-
     };
 
     const onforgetPassord = (data) => {
@@ -268,26 +216,20 @@ const LoginModal = ({ id='', type }) => {
         }
         ApiService.postData('/user/forgetpassword', dataString).then((res) => {
             if (res.status == "success") {
-                setTimeout(() => {
-                    setuserid(res.user_id)
-                    setshowloader(false)
-                    setStep(7)
-                }, [1000])
-            } else {
-                const errormsg = res?.message;
-                setErrorMessage(errormsg)
+                setuserid(res.user_id)
                 setshowloader(false)
-                setTimeout(() => {
-                    setErrorMessage('')
-                }, 2000)
-
+                setStep(7)
+                setResendTimer(30);
+            } else {
+                showToast("error", res.data.message)
+                setshowloader(false)
             }
         }).catch(() => { })
     }
 
     const onSubmitforgetOtp = (data) => {
         if (otp == "") {
-            setErrorMessage("Otp is required")
+            showToast("error", 'OTP is required')
             return
         }
         setshowloader(true)
@@ -298,59 +240,34 @@ const LoginModal = ({ id='', type }) => {
         ApiService.postData('/user/verifyforgetotp', dataString).then((res) => {
             if (res.status == "success") {
                 setuserid(res?.id)
-                setSuccessMessage(res?.message)
-                setTimeout(() => {
-                    setshowloader(false)
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                    setStep(8)
-
-                }, 1000)
-
-            } else {
-                const errormsg = res?.message;
-                setErrorMessage(errormsg)
+                showToast("success", res.message)
                 setshowloader(false)
-                setTimeout(() => {
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                }, 1000)
+                setStep(8)
+            } else {
+                showToast("error", res.message)
+                setshowloader(false)
             }
         }).catch(() => { })
     }
 
     const resendforgetOTP = () => {
-        setErrorMessage('')
-        setSuccessMessage('')
         setResendTimer(30);
         const dataString = {
             user_id: userid
         }
         ApiService.postData('/user/resendforgetotp', dataString).then((res) => {
             if (res.status == "success") {
-                setSuccessMessage(res?.message)
+                showToast("success", res.message)
                 setuserid(res?.id)
-                setTimeout(() => {
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                }, 1000)
-
             } else {
-                const errormsg = res?.message;
-                setErrorMessage(errormsg)
-                setTimeout(() => {
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                }, 1000)
+                showToast("error", res.message)
             }
         }).catch(() => { })
     }
 
     const onChangePassword = (data) => {
-        setshowloader(true)
         if (data.user_changepassword !== data.user_changeCpassword) {
-            setErrorMessage('Password not match with confirm password')
-            setshowloader(false)
+            showToast("error", "Password not match with confirm password")
             return
         }
         const dataString = {
@@ -358,31 +275,20 @@ const LoginModal = ({ id='', type }) => {
             password: data.user_changepassword,
             confirmpass: data.user_changeCpassword
         }
+        setshowloader(true)
         ApiService.postData('/user/changepassword', dataString).then((res) => {
             if (res.status == 'success') {
                 setshowloader(false)
-                setSuccessMessage(res?.message)
-                setTimeout(() => {
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                    setStep(1)
-                }, 1000)
-
-            }
-            else {
-                const errormsg = res?.message;
-                setErrorMessage(errormsg)
+                showToast("success", res.message)
+                setStep(1)
+            } else {
+                showToast("error", res.message)
                 setshowloader(false)
-                setTimeout(() => {
-                    setErrorMessage('')
-                    setSuccessMessage('')
-                }, 1000)
             }
         })
     }
 
     const onClickforget = () => {
-        setErrorMessage('')
         setValue('forget_user_email', '')
         setValue('user_email', '')
         setValue('user_password', '')
@@ -399,7 +305,7 @@ const LoginModal = ({ id='', type }) => {
             property_id: id !== null && id !== '' ? id : ''
         }
         ApiService.postData('/user/loginwithgoogle', dataString).then((res) => {
-            if (res.status == "success") {
+            if (res.data.status == "success") {
                 let token = res?.token
                 localStorage.setItem("USER_TOKEN", token);
                 if (id) {
@@ -408,12 +314,7 @@ const LoginModal = ({ id='', type }) => {
                     window.location.href = '/dashboard'
                 }
             } else {
-                const errormsg = res?.message;
-                setErrorMessage(errormsg)
-                setTimeout(() => {
-                    setErrorMessage('')
-                }, 2000)
-
+                showToast("error", res.data.message)
             }
         })
 
@@ -433,7 +334,7 @@ const LoginModal = ({ id='', type }) => {
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onSubmitlogin)}>
                                 <fieldset className="box-fieldset">
-                                    <label for="name">Email<span>*</span>:</label>
+                                    <label>Email<span>*</span>:</label>
                                     <input type='email'  {...register("user_email", { required: true, })} name="user_email" className="form-control style-1"></input>
                                     {errors.user_email && errors.user_email.type === "required" && (
                                         <small className="text-danger">Email is required.</small>
@@ -471,7 +372,223 @@ const LoginModal = ({ id='', type }) => {
                                 ) : (
                                     "Login"
                                 )}</button>
-                                <div className="mt-12 text-variant-1 text-center noti">Not registered yet?<a href="#modalRegister" data-bs-toggle="modal" className="text-black fw-5">Sign Up</a> </div>
+                                <div className="mt-12 text-variant-1 text-center noti">Not registered yet?<a href="#" onClick={(e) => { e.preventDefault(); gotoregister() }} className="text-black fw-5">Sign Up</a> </div>
+                            </form>
+                        </div>
+                    }
+                    {step == 2 &&
+                        <div className="flat-account bg-surface">
+                            <h3 className="title text-center">Create an Account</h3>
+                            <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                            <form onSubmit={handleSubmit(onSubmitsendotp)}>
+                                <fieldset className="box-fieldset">
+                                    <label>Email<span>*</span>:</label>
+                                    <input type='email'  {...register("verify_user_email", { required: true, })} name="verify_user_email" className="form-control style-1"></input>
+                                    {errors.verify_user_email && errors.verify_user_email.type === "required" && (
+                                        <small className="text-danger">Email is required.</small>
+                                    )}
+                                </fieldset>
+                                <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
+                                    <img src="/img/loder01.gif" width="60px" height="11px" />
+                                ) : (
+                                    "Verify"
+                                )}</button>
+                                <div className="mt-12 text-variant-1 text-center noti">Already have an account?<a href="#" onClick={(e) => { e.preventDefault(); gotologin() }} className="text-black fw-5">Login Here</a> </div>
+                            </form>
+                        </div>
+                    }
+                    {step == 3 &&
+                        <div className="flat-account bg-surface">
+                            <h3 className="title text-center">Verify Otp</h3>
+                            <p>We have sent a verification code to {userEmail} <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); gotoregister() }}>Change</a></p>
+                            <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                            <form onSubmit={handleSubmit(onSubmitverifyotp)}>
+                                <div className='formgroup mb-20 otp-input' >
+                                    <OtpInput
+                                        value={otp}
+                                        onChange={setOtp}
+                                        numInputs={4}
+                                        renderInput={(props) => <input {...props} />}
+                                    />
+                                </div>
+                                <div className='formgroup mb-20'>
+                                    {resendTimer === 0 ? (
+                                        <p className=''>
+                                            Did not receive OTP? <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); resendOTP() }}>Resend OTP</a>
+                                        </p>
+                                    ) : (
+                                        <p className=''>Resend code in {resendTimer} sec</p>
+                                    )}
+                                </div>
+                                <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
+                                    <img src="/img/loder01.gif" width="60px" height="11px" />
+                                ) : (
+                                    "Continue"
+                                )}</button>
+                                <div className="mt-12 text-variant-1 text-center noti">Already have an account?<a href="#" onClick={(e) => { e.preventDefault(); gotologin() }} className="text-black fw-5">Login Here</a> </div>
+                            </form>
+                        </div>
+                    }
+                    {step == 4 &&
+                        <div className="flat-account bg-surface">
+                            <h3 className="title text-center">Create an Account</h3>
+                            <p>Please do the registration to continue.</p>
+                            <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                            <form onSubmit={handleSubmit(continueregister)}>
+                                <fieldset className="box-fieldset">
+                                    <label>Full Name<span>*</span>:</label>
+                                    <input type='text' {...register("user_registname", { required: true, })} name="user_registname" className="form-control style-1"></input>
+                                    {errors.user_registname && errors.user_registname.type === "required" && (<small className="text-danger">User Name is required.</small>)}
+                                </fieldset>
+                                <fieldset className="box-fieldset">
+                                    <label>DOB<span>*</span>:</label>
+                                    <input type='date' name="user_regisdob" {...register("user_regisdob", { required: true, })} className="form-control style-1"></input>
+                                    {errors.user_regisdob && errors.user_regisdob.type === "required" && (<small className="text-danger">DOB is required.</small>)}
+                                </fieldset>
+                                <fieldset className="box-fieldset">
+                                    <label>Mobile Number</label>
+                                    <input type='number' name="user_registmobileno" {...register("user_registmobileno")} className="form-control style-1"></input>
+                                </fieldset>
+                                <fieldset className="box-fieldset">
+                                    <label>Address</label>
+                                    <input type='text' name="user_regisaddress" {...register("user_regisaddress")} className="form-control style-1"></input>
+                                </fieldset>
+                                <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
+                                    <img src="/img/loder01.gif" width="60px" height="11px" />
+                                ) : (
+                                    "Continue"
+                                )}</button>
+                                <div className="mt-12 text-variant-1 text-center noti">Already have an account?<a href="#" onClick={(e) => { e.preventDefault(); gotologin() }} className="text-black fw-5">Login Here</a> </div>
+                            </form>
+                        </div>
+                    }
+                    {step == 5 &&
+                        <div className="flat-account bg-surface">
+                            <h3 className="title text-center">Set Password</h3>
+                            <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                            <form onSubmit={handleSubmit(onSubmitregister)}>
+                                <fieldset className="box-fieldset">
+                                    <label for="pass">Password<span>*</span>:</label>
+                                    <div className="box-password">
+                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_registepassword"  {...register("user_registepassword", { required: true, })} />
+                                        <span className="show-pass">
+                                            <i className="icon-pass icon-eye"></i>
+                                            <i className="icon-pass icon-eye-off"></i>
+                                        </span>
+                                        {errors.user_registepassword && errors.user_registepassword.type === "required" && (
+                                            <small className="text-danger">Password is required.</small>
+                                        )}
+                                    </div>
+                                </fieldset>
+                                <fieldset className="box-fieldset">
+                                    <label for="pass">Confirm Password<span>*</span>:</label>
+                                    <div className="box-password">
+                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_resgisCpassword"  {...register("user_resgisCpassword", { required: true, })} />
+                                        <span className="show-pass">
+                                            <i className="icon-pass icon-eye"></i>
+                                            <i className="icon-pass icon-eye-off"></i>
+                                        </span>
+                                        {errors.user_resgisCpassword && errors.user_resgisCpassword.type === "required" && (
+                                            <small className="text-danger">Confirm Password is required.</small>
+                                        )}
+                                    </div>
+                                </fieldset>
+                                <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
+                                    <img src="/img/loder01.gif" width="60px" height="11px" />
+                                ) : (
+                                    "Register"
+                                )}</button>
+                                <div className="mt-12 text-variant-1 text-center noti">Already have an account?<a href="#" onClick={(e) => { e.preventDefault(); gotologin() }} className="text-black fw-5">Login Here</a> </div>
+                            </form>
+                        </div>
+                    }
+                    {step == 6 &&
+                        <div className="flat-account bg-surface">
+                            <h3 className="title text-center">Forget Password</h3>
+                            <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                            <form onSubmit={handleSubmit(onforgetPassord)}>
+                                <fieldset className="box-fieldset">
+                                    <label>Email<span>*</span>:</label>
+                                    <input type='email'  {...register("forget_user_email", { required: true, })} name="forget_user_email" className="form-control style-1"></input>
+                                    {errors.forget_user_email && errors.forget_user_email.type === "required" && (
+                                        <small className="text-danger">Email is required.</small>
+                                    )}
+                                </fieldset>
+                                <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
+                                    <img src="/img/loder01.gif" width="60px" height="11px" />
+                                ) : (
+                                    "Continue"
+                                )}</button>
+                            </form>
+                        </div>
+                    }
+                    {step == 7 &&
+                        <div className="flat-account bg-surface">
+                            <h3 className="title text-center">Verify Otp</h3>
+                            <p>We have sent a verification code to {userEmail} <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); gotoregister() }}>Change</a></p>
+                            <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                            <form onSubmit={handleSubmit(onSubmitforgetOtp)}>
+                                <div className='formgroup mb-20 otp-input' >
+                                    <OtpInput
+                                        value={otp}
+                                        onChange={setOtp}
+                                        numInputs={4}
+                                        renderInput={(props) => <input {...props} />}
+                                    />
+                                </div>
+                                <div className='formgroup mb-20'>
+                                    {resendTimer === 0 ? (
+                                        <p className=''>
+                                            Did not receive OTP? <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); resendOTP() }}>Resend OTP</a>
+                                        </p>
+                                    ) : (
+                                        <p className=''>Resend code in {resendTimer} sec</p>
+                                    )}
+                                </div>
+                                <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
+                                    <img src="/img/loder01.gif" width="60px" height="11px" />
+                                ) : (
+                                    "Continue"
+                                )}</button>
+                            </form>
+                        </div>
+                    }
+                    {step == 8 &&
+                        <div className="flat-account bg-surface">
+                            <h3 className="title text-center">Set Password</h3>
+                            <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
+                            <form onSubmit={handleSubmit(onChangePassword)}>
+                                <fieldset className="box-fieldset">
+                                    <label for="pass">Password<span>*</span>:</label>
+                                    <div className="box-password">
+                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_changepassword"  {...register("user_changepassword", { required: true, })} />
+                                        <span className="show-pass">
+                                            <i className="icon-pass icon-eye"></i>
+                                            <i className="icon-pass icon-eye-off"></i>
+                                        </span>
+                                        {errors.user_changepassword && errors.user_changepassword.type === "required" && (
+                                            <small className="text-danger">Password is required.</small>
+                                        )}
+                                    </div>
+                                </fieldset>
+                                <fieldset className="box-fieldset">
+                                    <label for="pass">Confirm Password<span>*</span>:</label>
+                                    <div className="box-password">
+                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_changeCpassword"  {...register("user_changeCpassword", { required: true, })} />
+                                        <span className="show-pass">
+                                            <i className="icon-pass icon-eye"></i>
+                                            <i className="icon-pass icon-eye-off"></i>
+                                        </span>
+                                        {errors.user_changeCpassword && errors.user_changeCpassword.type === "required" && (
+                                            <small className="text-danger">Confirm Password is required.</small>
+                                        )}
+                                    </div>
+                                </fieldset>
+                                <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
+                                    <img src="/img/loder01.gif" width="60px" height="11px" />
+                                ) : (
+                                    "Change"
+                                )}</button>
                             </form>
                         </div>
                     }

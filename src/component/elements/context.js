@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, useRef } from 'react';
-import {ApiService} from '../Services/apiservices'
+import { ApiService } from '../services/apiservices';
 
 const DataContext = createContext();
 export const DataProvider = ({ children }) => {

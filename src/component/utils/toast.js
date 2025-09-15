@@ -1,30 +1,24 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 export const showToast = (type = 'info', message) => {
+  const options = {
+    position: 'top-right',
+    autoClose: 3000,
+  };
+
   switch (type) {
     case 'success':
-      toast.success(message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 3000,
-      });
+      toast.success(message, options);
       break;
     case 'error':
-      toast.error(message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 3000,
-      });
+      toast.error(message, options);
       break;
     case 'warning':
-      toast.warning(message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 3000,
-      });
+      toast.warning(message, options);
       break;
     default:
-      toast.info(message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 3000,
-      });
+      toast.info(message, options);
       break;
   }
 };
