@@ -5,7 +5,7 @@ const Footer = () => {
         <div className="container">
           <div className="content-footer-top">
             <div className="footer-logo">
-              <img src="images/logo/logo-footer@2x.png" alt="logo-footer" width="174" height="44" />
+              <img src="/img/logo.png" alt="logo-footer" width="174" height="44" />
             </div>
             <div className="wd-social">
               <span>Follow Us:</span>

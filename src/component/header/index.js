@@ -6,73 +6,29 @@ const Header = () => {
                     <div className="col-lg-12">
                         <div className="inner-container d-flex justify-content-between align-items-center">
                             <div className="logo-box flex">
-                                <div className="logo"><a href="index.html"><img src="images/logo/logo@2x.png" alt="logo" width="174" height="44" /></a></div>
+                                <div className="logo"><a href="/"><img src="/img/logo.png" alt="logo" width="174" height="44" /></a></div>
                             </div>
                             <div className="nav-outer">
                                 <nav className="main-menu show navbar-expand-md">
                                     <div className="navbar-collapse collapse clearfix" id="navbarSupportedContent">
                                         <ul className="navigation clearfix">
-                                            <li className="dropdown2 home current"><a href="#">Home</a>
+                                            <li className="home current"><a href="/">Home</a></li>
+                                            <li className="dropdown2"><a href="#">Company</a>
                                                 <ul>
-                                                    <li><a href="index.html">Homepage 01</a></li>
-                                                    <li className="current"><a href="home-02.html">Homepage 02</a></li>
-                                                    <li><a href="home-03.html">Homepage 03</a></li>
-                                                    <li><a href="home-04.html">Homepage 04</a></li>
-                                                    <li><a href="home-05.html">Homepage 05</a></li>
-                                                    <li><a href="home-06.html">Homepage 06</a></li>
-
+                                                    <li><a href="/about-us">About Us</a></li>
+                                                    <li><a href="/who-we-are">Who We Are</a></li>
+                                                    <li><a href="/our-team">Our Team</a></li>
                                                 </ul>
                                             </li>
-                                            <li className="dropdown2"><a href="#">Listing</a>
+                                            <li className=""><a href="/features">Features</a></li>
+                                            <li className=""><a href="/solution">Solution</a></li>
+                                            <li className=""><a href="/pricing">Pricing</a></li>
+                                            <li className="dropdown2"><a href="#">Resources</a>
                                                 <ul>
-                                                    <li><a href="property-halfmap-grid.html">Property Half Map Grid</a></li>
-                                                    <li><a href="property-halfmap-list.html">Property Half Map List</a></li>
-                                                    <li><a href="topmap-grid.html">Find Topmap Grid</a></li>
-                                                    <li><a href="topmap-list.html">Find Topmap List</a></li>
-                                                    <li><a href="sidebar-grid.html">Find Sidebar Grid</a></li>
-                                                    <li><a href="sidebar-list.html">Find Sidebar List</a></li>
-
+                                                    <li><a href="/blog-list">Blogs</a></li>
                                                 </ul>
                                             </li>
-                                            <li className="dropdown2"><a href="#">Properties</a>
-                                                <ul>
-                                                    <li><a href="property-details-v1.html">Property Details 1</a></li>
-                                                    <li><a href="property-details-v2.html">Property Details 2</a></li>
-                                                    <li><a href="property-details-v3.html">Property Details 3</a></li>
-                                                    <li><a href="property-details-v4.html">Property Details 4</a></li>
-                                                </ul>
-                                            </li>
-                                            <li className="dropdown2"><a href="#">Pages</a>
-                                                <ul>
-                                                    <li><a href="about-us.html">About Us</a></li>
-                                                    <li><a href="our-service.html">Our Services</a></li>
-                                                    <li><a href="pricing.html">Pricing</a></li>
-                                                    <li><a href="contact.html">Contact Us</a></li>
-                                                    <li><a href="faq.html">FAQs</a></li>
-                                                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                                                    <li><a href="icon.html">Icons</a></li>
-
-                                                </ul>
-                                            </li>
-                                            <li className="dropdown2"><a href="#">Blog</a>
-                                                <ul>
-                                                    <li><a href="blog.html">Blog Default</a></li>
-                                                    <li><a href="blog-grid.html">Blog Grid</a></li>
-                                                    <li><a href="blog-detail.html">Blog Post Details</a></li>
-                                                </ul>
-                                            </li>
-
-                                            <li className="dropdown2"><a href="#">Dashboard</a>
-                                                <ul>
-                                                    <li><a href="dashboard.html">Dashboard</a></li>
-                                                    <li><a href="my-favorites.html">My Properties</a></li>
-                                                    <li><a href="my-invoices.html">My Invoices</a></li>
-                                                    <li><a href="my-favorites.html">My Favorites</a></li>
-                                                    <li><a href="reviews.html">Reviews</a></li>
-                                                    <li><a href="my-profile.html">My Profile</a></li>
-                                                    <li><a href="add-property.html">Add Property</a></li>
-                                                </ul>
-                                            </li>
+                                            <li className=""><a href="/contact-us">Contact Us</a></li>
                                         </ul>
                                     </div>
                                 </nav>
@@ -101,7 +57,7 @@ const Header = () => {
             <div className="mobile-menu">
                 <div className="menu-backdrop"></div>
                 <nav className="menu-box">
-                    <div className="nav-logo"><a href="index.html"><img src="images/logo/logo@2x.png" alt="nav-logo" width="174" height="44" /></a></div>
+                    <div className="nav-logo"><a href="index.html"><img src="/img/logo.png" alt="nav-logo" width="174" height="44" /></a></div>
                     <div className="bottom-canvas">
                         <div className="login-box">
                             <a href="#modalLogin" data-bs-toggle="modal">Login</a>
