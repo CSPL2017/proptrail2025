@@ -25,7 +25,6 @@ const Footer = () => {
                   </svg>
                 </a></li>
                 <li><a href="#" className="box-icon w-40 social"><i className="icon icon-pinterest"></i></a></li>
-                <li><a href="#" className="box-icon w-40 social"><i className="icon icon-instagram"></i></a></li>
                 <li><a href="#" className="box-icon w-40 social"><i className="icon icon-youtube"></i></a></li>
               </ul>
             </div>
@@ -38,19 +37,15 @@ const Footer = () => {
             <div className="col-lg-4 col-md-6">
               <div className="footer-cl-1">
 
-                <p className="text-variant-2">Specializes in providing high-class tours for those in need. Contact Us</p>
-                <ul className="mt-12">
-                  <li className="mt-12 d-flex align-items-center gap-8">
-                    <i className="icon icon-mapPinLine fs-20 text-variant-2"></i>
-                    <p className="text-white">101 E 129th St, East Chicago, IN 46312, US</p>
-                  </li>
+                <p className="text-variant-2">Proptrail can provide your estimated property value in less than a minute. Monitor the market to make informed property decisions.</p>
+                <ul className="mt-12"> 
                   <li className="mt-12 d-flex align-items-center gap-8">
                     <i className="icon icon-phone2 fs-20 text-variant-2"></i>
-                    <a href="tel:1-333-345-6868" className="text-white caption-1">1-333-345-6868</a>
+                    <a href="tel:9999999999" className="text-white caption-1">999-999-9999</a>
                   </li>
                   <li className="mt-12 d-flex align-items-center gap-8">
                     <i className="icon icon-mail fs-20 text-variant-2"></i>
-                    <p className="text-white">themesflat@gmail.com</p>
+                    <p className="text-white">proptrail@gmail.com</p>
                   </li>
                 </ul>
 
@@ -58,28 +53,23 @@ const Footer = () => {
             </div>
             <div className="col-lg-2 col-md-6 col-6">
               <div className="footer-cl-2">
-                <div className="fw-7 text-white">Categories</div>
+                <div className="fw-7 text-white">Quick Links</div>
                 <ul className="mt-10 navigation-menu-footer">
-                  <li> <a href="pricing.html" className="caption-1 text-variant-2">Pricing Plans</a> </li>
-
-                  <li> <a href="our-service.html" className="caption-1 text-variant-2">Our Services</a> </li>
-
-                  <li> <a href="about-us.html" className="caption-1 text-variant-2">About Us</a> </li>
-
-                  <li> <a href="contact.html" className="caption-1 text-variant-2">Contact Us</a> </li>
-
+                  <li> <a href="/about-us" className="caption-1 text-variant-2">About Us</a> </li>
+                  <li> <a href="/who-we-are" className="caption-1 text-variant-2">Who We Are</a> </li>
+                  <li> <a href="/our-team" className="caption-1 text-variant-2">Our Team</a> </li>
+                  <li> <a href="/contact-us" className="caption-1 text-variant-2">Contact Us</a> </li>
                 </ul>
               </div>
             </div>
             <div className="col-lg-2 col-md-4 col-6">
               <div className="footer-cl-3">
-                <div className="fw-7 text-white">Our Company</div>
+                <div className="fw-7 text-white">Useful Links</div>
                 <ul className="mt-10 navigation-menu-footer">
-                  <li> <a href="topmap-list.html" className="caption-1 text-variant-2">Property For Sale</a> </li>
-
-                  <li> <a href="topmap-grid.html" className="caption-1 text-variant-2">Property For Rent</a> </li>
-                  <li> <a href="topmap-grid.html" className="caption-1 text-variant-2">Property For Buy</a> </li>
-                  <li> <a href="topmap-grid.html" className="caption-1 text-variant-2">Our Agents</a> </li>
+                  <li> <a href="/privacy-policy" className="caption-1 text-variant-2">Privacy Policy</a> </li>
+                  <li> <a href="/terms-conditions" className="caption-1 text-variant-2">Terms & Conditions</a> </li>
+                  <li> <a href="/solution" className="caption-1 text-variant-2">Solution</a> </li>
+                  <li> <a href="/pricing" className="caption-1 text-variant-2">Pricing</a> </li>
                 </ul>
               </div>
             </div>
@@ -106,15 +96,7 @@ const Footer = () => {
       <div className="bottom-footer">
         <div className="container">
           <div className="content-footer-bottom">
-            <div className="copyright">©2024 Homzen. All Rights Reserved.</div>
-
-            <ul className="menu-bottom">
-              <li><a href="our-service.html">Terms Of Services</a> </li>
-
-              <li><a href="pricing.html">Privacy Policy</a> </li>
-              <li><a href="contact.html">Cookie Policy</a> </li>
-
-            </ul>
+            <div className="copyright">©2024 PropTrail. All Rights Reserved.</div> 
           </div>
         </div>
       </div>
