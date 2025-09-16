@@ -17,6 +17,7 @@ const Header = () => {
         }
     }, []); */
     useEffect(() => {
+        document.body.classList.add("bg-surface");
         if (didMountRef.current) {
             if (getusertoken) {
                 getUserdatadetail()
