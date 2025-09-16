@@ -1,12 +1,11 @@
+import React, { useState, useEffect } from "react";
 import { ApiService } from "../services/apiservices";
 import OtpInput from 'react-otp-input'
-import React, { useState, useEffect } from "react";
 import { useForm, } from "react-hook-form"
-// import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { toast } from 'react-toastify';
 import { showToast } from "../utils/toast";
 const LoginModal = ({ id = '', type }) => {
-    let apiServices = new ApiService()
     const {
         register,
         handleSubmit,
@@ -19,6 +18,7 @@ const LoginModal = ({ id = '', type }) => {
     const [showloader, setshowloader] = useState(false);
     const [userid, setuserid] = useState("")
     const userEmail = watch("verify_user_email")
+    const userForgotEmail = watch("forget_user_email")
     const useraddress = watch("user_regisaddress")
     const username = watch("user_registname")
     const userdob = watch("user_regisdob")
@@ -41,11 +41,11 @@ const LoginModal = ({ id = '', type }) => {
             property_id: id !== null && id !== '' ? id : ''
 
         }
-        apiServices.getuserregister(dataString).then((res) => {
-            if (res.data.status == "success") {
-                let token = res?.data?.token
+        ApiService.postData('/user/getregister', dataString).then((res) => {
+            if (res.status == "success") {
+                let token = res.token
                 localStorage.setItem("USER_TOKEN", token)
-                showToast("success", res.data.message)
+                showToast("success", res.message)
                 setshowloader(false)
                 if (id) {
                     window.location.reload()
@@ -53,7 +53,7 @@ const LoginModal = ({ id = '', type }) => {
                     window.location.href = '/dashboard'
                 }
             } else {
-                showToast("error", res.data.message)
+                showToast("error", res.message)
                 setshowloader(false)
             }
         }).catch((error) => {
@@ -121,9 +121,9 @@ const LoginModal = ({ id = '', type }) => {
             user_password: data?.user_password,
             property_id: id !== null && id !== '' ? id : ''
         }
-        apiServices.getuserlogin(dataString).then((res) => {
-            if (res.data.status == "success") {
-                let token = res?.data?.token
+        ApiService.postData('/user/getlogin', dataString).then((res) => {
+            if (res.status == "success") {
+                let token = res.token
                 localStorage.setItem("USER_TOKEN", token);
                 setshowloader(false)
                 if (id) {
@@ -133,9 +133,11 @@ const LoginModal = ({ id = '', type }) => {
                 }
             } else {
                 setshowloader(false)
-                showToast("error", res.data.message)
+                showToast("error", res.message)
             }
-        }).catch(() => { })
+        }).catch((error) => {
+            setshowloader(false)
+        })
 
     }
 
@@ -144,25 +146,22 @@ const LoginModal = ({ id = '', type }) => {
             showToast("error", "Otp is required")
             return
         }
-
-        setshowloader(true)
         const dataString = {
             user_otp: otp,
             user_id: userid
         }
-
-        apiServices.gettoverifyotp(dataString).then((res) => {
-            if (res.data.status == "success") {
-                setuserid(res?.data?.id)
-                showToast("success", res.data.message)
+        setshowloader(true)
+        ApiService.postData('/user/verifyotp', dataString).then((res) => {
+            if (res.status == "success") {
+                setuserid(res.id)
+                showToast("success", res.message)
                 setshowloader(false)
                 setStep(4)
             } else {
-                showToast("error", res.data.message)
+                showToast("error", res.message)
                 setshowloader(false)
             }
-        }).catch((error) => { })
-
+        }).catch((error) => { setshowloader(false) })
     }
 
     const onSubmitsendotp = (data) => {
@@ -171,27 +170,23 @@ const LoginModal = ({ id = '', type }) => {
             showToast("error", "Email is not correct")
             return
         }
-        else {
-            const email = data?.verify_user_email.toLowerCase();
-            const dataString = {
-                user_email: email,
-            }
-            setshowloader(true)
-            apiServices.gettosendotp(dataString).then((res) => {
-                if (res.data.status == "success") {
-                    setuserid(res?.data?.id)
-                    showToast("success", res.data.message)
-                    setshowloader(false)
-                    setStep(3)
-                    setResendTimer(30);
-                } else {
-                    showToast("error", res.data.message)
-                    setshowloader(false)
-                }
-            }).catch((error) => {
-
-            })
+        const email = data?.verify_user_email.toLowerCase();
+        const dataString = {
+            user_email: email,
         }
+        setshowloader(true)
+        ApiService.postData('/user/sendotp', dataString).then((res) => {
+            if (res.status == "success") {
+                setuserid(res.id)
+                showToast("success", res.message)
+                setshowloader(false)
+                setStep(3)
+                setResendTimer(30);
+            } else {
+                showToast("error", res.message)
+                setshowloader(false)
+            }
+        }).catch((error) => { setshowloader(false) })
     }
 
     const resendOTP = () => {
@@ -199,14 +194,14 @@ const LoginModal = ({ id = '', type }) => {
         const dataString = {
             user_id: userid
         }
-        apiServices.getresendotp(dataString).then((res) => {
-            if (res.data.status == "success") {
-                showToast("success", res.data.message)
-                setuserid(res?.data?.id)
+        ApiService.postData('/user/resendotp', dataString).then((res) => {
+            if (res.status == "success") {
+                showToast("success", res.message)
+                setuserid(res.id)
             } else {
-                showToast("error", res.data.message)
+                showToast("error", res.message)
             }
-        }).catch(() => { })
+        }).catch(() => { setshowloader(false) })
     };
 
     const onforgetPassord = (data) => {
@@ -221,10 +216,10 @@ const LoginModal = ({ id = '', type }) => {
                 setStep(7)
                 setResendTimer(30);
             } else {
-                showToast("error", res.data.message)
+                showToast("error", res.message)
                 setshowloader(false)
             }
-        }).catch(() => { })
+        }).catch(() => { setshowloader(false) })
     }
 
     const onSubmitforgetOtp = (data) => {
@@ -247,22 +242,7 @@ const LoginModal = ({ id = '', type }) => {
                 showToast("error", res.message)
                 setshowloader(false)
             }
-        }).catch(() => { })
-    }
-
-    const resendforgetOTP = () => {
-        setResendTimer(30);
-        const dataString = {
-            user_id: userid
-        }
-        ApiService.postData('/user/resendforgetotp', dataString).then((res) => {
-            if (res.status == "success") {
-                showToast("success", res.message)
-                setuserid(res?.id)
-            } else {
-                showToast("error", res.message)
-            }
-        }).catch(() => { })
+        }).catch(() => { setshowloader(false) })
     }
 
     const onChangePassword = (data) => {
@@ -285,7 +265,7 @@ const LoginModal = ({ id = '', type }) => {
                 showToast("error", res.message)
                 setshowloader(false)
             }
-        })
+        }).catch(() => { setshowloader(false) })
     }
 
     const onClickforget = () => {
@@ -299,13 +279,12 @@ const LoginModal = ({ id = '', type }) => {
     }
 
     const handleSuccess = (res) => {
-
         const dataString = {
             googletoken: res?.credential,
             property_id: id !== null && id !== '' ? id : ''
         }
         ApiService.postData('/user/loginwithgoogle', dataString).then((res) => {
-            if (res.data.status == "success") {
+            if (res.status == "success") {
                 let token = res?.token
                 localStorage.setItem("USER_TOKEN", token);
                 if (id) {
@@ -314,9 +293,9 @@ const LoginModal = ({ id = '', type }) => {
                     window.location.href = '/dashboard'
                 }
             } else {
-                showToast("error", res.data.message)
+                showToast("error", res.message)
             }
-        })
+        }).catch(() => { setshowloader(false) })
 
     }
 
@@ -324,13 +303,15 @@ const LoginModal = ({ id = '', type }) => {
         console.log(error, 'login failed')
         toast.error('Login Failed Please Try Again')
     }
-    return (<>
+
+    return (
         <div className="modal fade" id="modalLogin">
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
+                    {/* Login With Password */}
                     {step == 1 &&
                         <div className="flat-account bg-surface">
-                            <h3 className="title text-center">Log In</h3>
+                            <h5 className="title text-center">Log In</h5>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onSubmitlogin)}>
                                 <fieldset className="box-fieldset">
@@ -361,12 +342,16 @@ const LoginModal = ({ id = '', type }) => {
                                     <a href="#" className="caption-1 text-primary" onClick={(e) => { e.preventDefault(); onClickforget() }}>Forgot password?</a>
                                 </div>
                                 <div className="text-variant-1 auth-line">or sign up with</div>
-                                <div className="login-social">
+                                {/* <div className="login-social">
                                     <a href="#" className="btn-login-social">
                                         <img src="/images/logo/google.webp" alt="img" />
                                         Continue with Google
                                     </a>
-                                </div>
+                                </div> */}
+                                <GoogleLogin
+                                    onSuccess={handleSuccess}
+                                    onError={() => handleloginfailed()}
+                                />
                                 <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
                                     <img src="/img/loder01.gif" width="60px" height="11px" />
                                 ) : (
@@ -376,9 +361,10 @@ const LoginModal = ({ id = '', type }) => {
                             </form>
                         </div>
                     }
+                    {/* Registration */}
                     {step == 2 &&
                         <div className="flat-account bg-surface">
-                            <h3 className="title text-center">Create an Account</h3>
+                            <h5 className="title text-center">Create an Account</h5>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onSubmitsendotp)}>
                                 <fieldset className="box-fieldset">
@@ -391,19 +377,20 @@ const LoginModal = ({ id = '', type }) => {
                                 <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
                                     <img src="/img/loder01.gif" width="60px" height="11px" />
                                 ) : (
-                                    "Verify"
+                                    "Continue"
                                 )}</button>
                                 <div className="mt-12 text-variant-1 text-center noti">Already have an account?<a href="#" onClick={(e) => { e.preventDefault(); gotologin() }} className="text-black fw-5">Login Here</a> </div>
                             </form>
                         </div>
                     }
+                    {/* Register OTP */}
                     {step == 3 &&
                         <div className="flat-account bg-surface">
-                            <h3 className="title text-center">Verify Otp</h3>
-                            <p>We have sent a verification code to {userEmail} <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); gotoregister() }}>Change</a></p>
+                            <h5 className="title text-center">Verify OTP</h5>
+                            <p style={{ marginBottom: '20px' }}>We have sent a verification code to {userEmail} <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); gotoregister() }}>Change</a></p>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onSubmitverifyotp)}>
-                                <div className='formgroup mb-20 otp-input' >
+                                <div className='formgroup otp-input' style={{ marginBottom: '20px' }}>
                                     <OtpInput
                                         value={otp}
                                         onChange={setOtp}
@@ -411,7 +398,7 @@ const LoginModal = ({ id = '', type }) => {
                                         renderInput={(props) => <input {...props} />}
                                     />
                                 </div>
-                                <div className='formgroup mb-20'>
+                                <div className='formgroup'>
                                     {resendTimer === 0 ? (
                                         <p className=''>
                                             Did not receive OTP? <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); resendOTP() }}>Resend OTP</a>
@@ -429,10 +416,10 @@ const LoginModal = ({ id = '', type }) => {
                             </form>
                         </div>
                     }
+                    {/* Register Personal Details */}
                     {step == 4 &&
                         <div className="flat-account bg-surface">
-                            <h3 className="title text-center">Create an Account</h3>
-                            <p>Please do the registration to continue.</p>
+                            <h5 className="title text-center">Personal Details</h5>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(continueregister)}>
                                 <fieldset className="box-fieldset">
@@ -462,19 +449,16 @@ const LoginModal = ({ id = '', type }) => {
                             </form>
                         </div>
                     }
+                    {/* Register Password */}
                     {step == 5 &&
                         <div className="flat-account bg-surface">
-                            <h3 className="title text-center">Set Password</h3>
+                            <h5 className="title text-center">Set Password</h5>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onSubmitregister)}>
                                 <fieldset className="box-fieldset">
                                     <label for="pass">Password<span>*</span>:</label>
                                     <div className="box-password">
-                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_registepassword"  {...register("user_registepassword", { required: true, })} />
-                                        <span className="show-pass">
-                                            <i className="icon-pass icon-eye"></i>
-                                            <i className="icon-pass icon-eye-off"></i>
-                                        </span>
+                                        <input type="password" className="form-contact style-1" placeholder="Password" name="user_registepassword"  {...register("user_registepassword", { required: true, })} />
                                         {errors.user_registepassword && errors.user_registepassword.type === "required" && (
                                             <small className="text-danger">Password is required.</small>
                                         )}
@@ -483,11 +467,7 @@ const LoginModal = ({ id = '', type }) => {
                                 <fieldset className="box-fieldset">
                                     <label for="pass">Confirm Password<span>*</span>:</label>
                                     <div className="box-password">
-                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_resgisCpassword"  {...register("user_resgisCpassword", { required: true, })} />
-                                        <span className="show-pass">
-                                            <i className="icon-pass icon-eye"></i>
-                                            <i className="icon-pass icon-eye-off"></i>
-                                        </span>
+                                        <input type="password" className="form-contact style-1" placeholder="Password" name="user_resgisCpassword"  {...register("user_resgisCpassword", { required: true, })} />
                                         {errors.user_resgisCpassword && errors.user_resgisCpassword.type === "required" && (
                                             <small className="text-danger">Confirm Password is required.</small>
                                         )}
@@ -502,9 +482,10 @@ const LoginModal = ({ id = '', type }) => {
                             </form>
                         </div>
                     }
+                    {/* Forgot Password */}
                     {step == 6 &&
                         <div className="flat-account bg-surface">
-                            <h3 className="title text-center">Forget Password</h3>
+                            <h5 className="title text-center">Forget Password</h5>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onforgetPassord)}>
                                 <fieldset className="box-fieldset">
@@ -522,13 +503,14 @@ const LoginModal = ({ id = '', type }) => {
                             </form>
                         </div>
                     }
+                    {/* Forgot Verify OTP */}
                     {step == 7 &&
                         <div className="flat-account bg-surface">
-                            <h3 className="title text-center">Verify Otp</h3>
-                            <p>We have sent a verification code to {userEmail} <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); gotoregister() }}>Change</a></p>
+                            <h5 className="title text-center">Verify OTP</h5>
+                            <p style={{ marginBottom: '20px' }}>We have sent a verification code to {userForgotEmail} <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); gotoregister('forget') }}>Change</a></p>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onSubmitforgetOtp)}>
-                                <div className='formgroup mb-20 otp-input' >
+                                <div className='formgroup otp-input' style={{ marginBottom: '20px' }}>
                                     <OtpInput
                                         value={otp}
                                         onChange={setOtp}
@@ -536,7 +518,7 @@ const LoginModal = ({ id = '', type }) => {
                                         renderInput={(props) => <input {...props} />}
                                     />
                                 </div>
-                                <div className='formgroup mb-20'>
+                                <div className='formgroup'>
                                     {resendTimer === 0 ? (
                                         <p className=''>
                                             Did not receive OTP? <a href='#' className='tx-primary' onClick={(e) => { e.preventDefault(); resendOTP() }}>Resend OTP</a>
@@ -553,19 +535,16 @@ const LoginModal = ({ id = '', type }) => {
                             </form>
                         </div>
                     }
+                    {/* Forgot Password */}
                     {step == 8 &&
                         <div className="flat-account bg-surface">
-                            <h3 className="title text-center">Set Password</h3>
+                            <h5 className="title text-center">Set Password</h5>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onChangePassword)}>
                                 <fieldset className="box-fieldset">
                                     <label for="pass">Password<span>*</span>:</label>
                                     <div className="box-password">
-                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_changepassword"  {...register("user_changepassword", { required: true, })} />
-                                        <span className="show-pass">
-                                            <i className="icon-pass icon-eye"></i>
-                                            <i className="icon-pass icon-eye-off"></i>
-                                        </span>
+                                        <input type="password" className="form-contact style-1" placeholder="Password" name="user_changepassword"  {...register("user_changepassword", { required: true, })} />
                                         {errors.user_changepassword && errors.user_changepassword.type === "required" && (
                                             <small className="text-danger">Password is required.</small>
                                         )}
@@ -574,11 +553,7 @@ const LoginModal = ({ id = '', type }) => {
                                 <fieldset className="box-fieldset">
                                     <label for="pass">Confirm Password<span>*</span>:</label>
                                     <div className="box-password">
-                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_changeCpassword"  {...register("user_changeCpassword", { required: true, })} />
-                                        <span className="show-pass">
-                                            <i className="icon-pass icon-eye"></i>
-                                            <i className="icon-pass icon-eye-off"></i>
-                                        </span>
+                                        <input type="password" className="form-contact style-1" placeholder="Password" name="user_changeCpassword"  {...register("user_changeCpassword", { required: true, })} />
                                         {errors.user_changeCpassword && errors.user_changeCpassword.type === "required" && (
                                             <small className="text-danger">Confirm Password is required.</small>
                                         )}
@@ -595,6 +570,6 @@ const LoginModal = ({ id = '', type }) => {
                 </div>
             </div>
         </div>
-    </>)
+    )
 }
 export default LoginModal
