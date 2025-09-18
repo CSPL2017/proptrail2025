@@ -311,7 +311,7 @@ const LoginModal = ({ id = '', type }) => {
                     {/* Login With Password */}
                     {step == 1 &&
                         <div className="flat-account bg-surface">
-                             <div className="text-center mb-4">
+                            <div className="text-center mb-4">
                                 <h6>Sign In</h6>
                                 <p>Welcome back! Please signin to continue.</p>
                             </div>
@@ -337,19 +337,19 @@ const LoginModal = ({ id = '', type }) => {
                                         )}
                                     </div>
                                 </fieldset>
-                               <button type="submit" className="tf-btn primary w-100 mt-3" disabled={showloader}>{showloader ? (
+                                <button type="submit" className="tf-btn primary w-100 mt-3" disabled={showloader}>{showloader ? (
                                     <img src="/img/loder01.gif" width="60px" height="11px" />
                                 ) : (
                                     "Login"
                                 )}</button>
-                                <div className="text-variant-1 auth-line">or sign up with</div>
+                                <div className="text-variant-1 auth-line">or sign in with</div>
 
                                 <GoogleLogin
+                                    text="signin_with" 
                                     onSuccess={handleSuccess}
                                     onError={() => handleloginfailed()}
                                 />
 
-                                
                                 <div className="mt-12 text-variant-1 text-center noti">Not registered yet?<a href="#" onClick={(e) => { e.preventDefault(); gotoregister() }} className="text-black fw-5">Sign Up</a> </div>
                             </form>
                         </div>
@@ -357,7 +357,7 @@ const LoginModal = ({ id = '', type }) => {
                     {/* Registration */}
                     {step == 2 &&
                         <div className="flat-account bg-surface">
-                             <div className="text-center mb-4">
+                            <div className="text-center mb-4">
                                 <h6 className="">Create an Account</h6>
                                 <p>We will send you an Email to verify your Email Address</p>
                             </div>
@@ -376,8 +376,13 @@ const LoginModal = ({ id = '', type }) => {
                                 ) : (
                                     "Continue"
                                 )}</button>
-                                 <div className="text-variant-1 auth-line">or sign up with</div>
+                                <div className="text-variant-1 auth-line">or sign up with</div>
 
+                                <GoogleLogin
+                                    text="signup_with" 
+                                    onSuccess={handleSuccess}
+                                    onError={() => handleloginfailed()}
+                                />
                                 <div className="mt-12 text-variant-1 text-center noti">Already have an account?<a href="#" onClick={(e) => { e.preventDefault(); gotologin() }} className="text-black fw-5">Login Here</a> </div>
                             </form>
                         </div>

@@ -131,13 +131,13 @@ const Dashboard = () => {
 
     }
     return (<>
-        <div class="layout-wrap">
+        <div className="layout-wrap">
             <Header />
-            <Accountsidebar />
-            <div class="main-content">
-                <div class="main-content-inner">
-                    <div class="widget-box-2">
-                        <h6 class="title">Dashboard</h6>
+            
+            <div className="main-content">
+                <div className="main-content-inner">
+                    <div className="widget-box-2">
+                        <h6 className="title">Dashboard</h6>
                         <div className="row g-3 justify-content-center mb-4">
                             {[
                                 { title: "Current Number of Properties", value: dashboardData?.propertyCount, icon: "/img/home.png" },

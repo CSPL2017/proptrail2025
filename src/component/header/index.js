@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import LoginModal from "../modal/login_modal"
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DataContext from "../elements/context";
 import { ApiService } from "../services/apiservices";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 const Header = () => {
     let getusertoken = localStorage.getItem("USER_TOKEN")
@@ -10,12 +11,12 @@ const Header = () => {
     const [type, settype] = useState('signin')
     const [id, setid] = useState('')
     const didMountRef = useRef(true);
+    const [show, setShow] = useState(false);
     const navigate = useNavigate()
-    /* useEffect(() => {
-        if (window.$ && $(".range-slider").length) {
-            $(".range-slider").rangleSlider();
-        }
-    }, []); */
+    const location = useLocation();
+    const { pathname } = location;
+
+    const isActive = (path) => (pathname === path ? "current" : "");
     useEffect(() => {
         document.body.classList.add("bg-surface");
         if (didMountRef.current) {
@@ -38,6 +39,20 @@ const Header = () => {
             }
         }).catch((error) => { })
     }
+
+    const logOut = () => {
+        setShow(true);
+    };
+
+    const Confirm = () => {
+        localStorage.removeItem("USER_TOKEN")
+        navigate("/");
+        window.location.reload()
+    };
+
+    const Cancelalert = () => {
+        setShow(false);
+    };
     return (<>
         <header className="main-header fixed-header header-dashboard">
             <div className="header-lower">
@@ -51,23 +66,23 @@ const Header = () => {
                                 <nav className="main-menu show navbar-expand-md">
                                     <div className="navbar-collapse collapse clearfix" id="navbarSupportedContent">
                                         <ul className="navigation clearfix">
-                                            <li className="home current"><a href="/">Home</a></li>
-                                            <li className="dropdown2"><a href="#">Company</a>
+                                            <li className={`home ${isActive("/")}`}><a href="/">Home</a></li>
+                                            <li className={`dropdown2 ${["/about-us", "/who-we-are", "/our-team"].includes(pathname) ? "current" : ""}`}><a href="#">Company</a>
                                                 <ul>
                                                     <li><a href="/about-us">About Us</a></li>
                                                     <li><a href="/who-we-are">Who We Are</a></li>
                                                     <li><a href="/our-team">Our Team</a></li>
                                                 </ul>
                                             </li>
-                                            <li className=""><a href="/features">Features</a></li>
-                                            <li className=""><a href="/solution">Solution</a></li>
-                                            <li className=""><a href="/pricing">Pricing</a></li>
-                                            <li className="dropdown2"><a href="#">Resources</a>
+                                            <li className={isActive("/features")}><a href="/features">Features</a></li>
+                                            <li className={isActive("/solution")}><a href="/solution">Solution</a></li>
+                                            <li className={isActive("/pricing")}><a href="/pricing">Pricing</a></li>
+                                            <li className={`dropdown2 ${pathname === "/blog-list" ? "current" : ""}`}><a href="#">Resources</a>
                                                 <ul>
                                                     <li><a href="/blog-list">Blogs</a></li>
                                                 </ul>
                                             </li>
-                                            <li className=""><a href="/contact-us">Contact Us</a></li>
+                                            <li className={isActive("/contact-us")}><a href="/contact-us">Contact Us</a></li>
                                         </ul>
                                     </div>
                                 </nav>
@@ -87,26 +102,26 @@ const Header = () => {
                                 </div>
                                 :
                                 <div className="header-account">
-                                        <a href="#" className="box-avatar dropdown-toggle" data-bs-toggle="dropdown">
-                                            <div className="avatar avt-40 round">
-                                                <img src="images/avatar/avt-2.jpg" alt="avt"/>
-                                            </div>
-                                            <p className="name">{contextValues?.rowUserData?.user_name} <span class="icon icon-arr-down"></span></p>
-                                            <div className="dropdown-menu">
-                                                <a className="dropdown-item" href="my-favorites.html">My Properties</a>
-                                                <a className="dropdown-item" href="my-invoices.html">My Invoices</a>
-                                                <a className="dropdown-item" href="my-favorites.html">My Favorites</a>
-                                                <a className="dropdown-item" href="reviews.html">Reviews</a>
-                                                <a className="dropdown-item" href="my-profile.html">My Profile</a>
-                                                <a className="dropdown-item" href="add-property.html">Add Property</a>
-                                                <a className="dropdown-item" href="index.html">Logout</a>
-                                            </div>
-                                        </a>
-                                        <div className="flat-bt-top">
-                                            <a className="tf-btn primary" href="add-property.html">List Property</a>
-                                        </div>  
+                                    <a href="#" className="box-avatar dropdown-toggle" data-bs-toggle="dropdown">
+                                        <div className="avatar avt-40 round">
+                                            <img src="images/avatar/avt-2.png" alt="avt" />
+                                        </div>
+                                        <p className="name">{contextValues?.rowUserData?.user_name} <span class="icon icon-arr-down"></span></p>
+                                        <div className="dropdown-menu">
+                                            <a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); navigate('/dashboard') }}>Dashboards</a>
+                                            <a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); navigate('/my-property') }}>My Properties</a>
+                                            <a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); navigate('/my-profile') }}>My Profile</a>
+                                            <a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); navigate('/track-my-property') }}>Track Properties</a>
+                                            <a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); navigate('/my-strategies') }}>My Strategy</a>
+                                            <a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); navigate('/help-support') }}>Help & Support</a>
+                                            <a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); logOut(); }}>Logout</a>
+                                        </div>
+                                    </a>
+                                    <div className="flat-bt-top">
+                                        <a className="tf-btn primary" href="add-property.html">List Property</a>
                                     </div>
-                            
+                                </div>
+
                             }
                             <div className="mobile-nav-toggler mobile-button"><span></span></div>
                         </div>
@@ -125,25 +140,25 @@ const Header = () => {
                             <span>/</span>
                             <a href="#modalRegister" data-bs-toggle="modal">Register</a>
                         </div>
-                        <div className="menu-outer"></div>
-                        <div className="button-mobi-sell">
-                            <a className="tf-btn primary" href="add-property.html">Submit Property</a>
-                        </div>
-                        <div className="mobi-icon-box">
-                            <div className="box d-flex align-items-center">
-                                <span className="icon icon-phone2"></span>
-                                <div>1-333-345-6868</div>
-                            </div>
-                            <div className="box d-flex align-items-center">
-                                <span className="icon icon-mail"></span>
-                                <div>themesflat@gmail.com</div>
-                            </div>
-                        </div>
+                        <div className="menu-outer"></div> 
                     </div>
                 </nav>
             </div>
         </header>
-        <LoginModal id={id} type={type} /> 
+        <LoginModal id={id} type={type} />
+        <SweetAlert
+            warning
+            confirmBtnCssClass="alertpop"
+            title={` Are you sure you want to Logout ? `}
+            confirmBtnText="Confirm"
+            cancelBtnText="Cancel"
+            show={show}
+            onConfirm={Confirm}
+            onCancel={Cancelalert}
+            btnSize="md"
+            showCancel
+            cancelBtnBsStyle="danger"
+        ></SweetAlert>
     </>)
 }
 
