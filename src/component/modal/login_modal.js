@@ -311,20 +311,23 @@ const LoginModal = ({ id = '', type }) => {
                     {/* Login With Password */}
                     {step == 1 &&
                         <div className="flat-account bg-surface">
-                            <h5 className="title text-center">Log In</h5>
+                             <div className="text-center mb-4">
+                                <h6 className="">Sign In</h6>
+                                <p>Welcome back! Please signin to continue.</p>
+                            </div>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onSubmitlogin)}>
                                 <fieldset className="box-fieldset">
-                                    <label>Email<span>*</span>:</label>
+                                    <label>Email Address</label>
                                     <input type='email'  {...register("user_email", { required: true, })} name="user_email" className="form-control style-1"></input>
                                     {errors.user_email && errors.user_email.type === "required" && (
                                         <small className="text-danger">Email is required.</small>
                                     )}
                                 </fieldset>
                                 <fieldset className="box-fieldset">
-                                    <label for="pass">Password<span>*</span>:</label>
+                                    <label className="d-flex justify-content-between">Password  <a href="#" className="caption-1 text-primary" onClick={(e) => { e.preventDefault(); onClickforget() }}>Forgot password?</a></label>
                                     <div className="box-password">
-                                        <input type="password" className="form-contact style-1 password-field" placeholder="Password" name="user_password"  {...register("user_password", { required: true, })} />
+                                        <input type="password" className="form-contact style-1 password-field" placeholder="" name="user_password"  {...register("user_password", { required: true, })} />
                                         <span className="show-pass">
                                             <i className="icon-pass icon-eye"></i>
                                             <i className="icon-pass icon-eye-off"></i>
@@ -334,29 +337,19 @@ const LoginModal = ({ id = '', type }) => {
                                         )}
                                     </div>
                                 </fieldset>
-                                <div className="d-flex justify-content-between flex-wrap gap-12">
-                                    <fieldset className="d-flex align-items-center gap-6">
-                                        <input type="checkbox" className="tf-checkbox style-2" id="cb1" />
-                                        <label for="cb1" className="caption-1 text-variant-1">Remember me</label>
-                                    </fieldset>
-                                    <a href="#" className="caption-1 text-primary" onClick={(e) => { e.preventDefault(); onClickforget() }}>Forgot password?</a>
-                                </div>
-                                <div className="text-variant-1 auth-line">or sign up with</div>
-                                {/* <div className="login-social">
-                                    <a href="#" className="btn-login-social">
-                                        <img src="/images/logo/google.webp" alt="img" />
-                                        Continue with Google
-                                    </a>
-                                </div> */}
-                                <GoogleLogin
-                                    onSuccess={handleSuccess}
-                                    onError={() => handleloginfailed()}
-                                />
-                                <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (
+                               <button type="submit" className="tf-btn primary w-100 mt-3" disabled={showloader}>{showloader ? (
                                     <img src="/img/loder01.gif" width="60px" height="11px" />
                                 ) : (
                                     "Login"
                                 )}</button>
+                                <div className="text-variant-1 auth-line">or sign up with</div>
+
+                                <GoogleLogin
+                                    onSuccess={handleSuccess}
+                                    onError={() => handleloginfailed()}
+                                />
+
+                                
                                 <div className="mt-12 text-variant-1 text-center noti">Not registered yet?<a href="#" onClick={(e) => { e.preventDefault(); gotoregister() }} className="text-black fw-5">Sign Up</a> </div>
                             </form>
                         </div>
@@ -364,11 +357,15 @@ const LoginModal = ({ id = '', type }) => {
                     {/* Registration */}
                     {step == 2 &&
                         <div className="flat-account bg-surface">
-                            <h5 className="title text-center">Create an Account</h5>
+                             <div className="text-center mb-4">
+                                <h6 className="">Create an Account</h6>
+                                <p>We will send you an Email to verify your Email Address</p>
+                            </div>
+                            <h5 className="title text-center"></h5>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onSubmitsendotp)}>
                                 <fieldset className="box-fieldset">
-                                    <label>Email<span>*</span>:</label>
+                                    <label>Email Address</label>
                                     <input type='email'  {...register("verify_user_email", { required: true, })} name="verify_user_email" className="form-control style-1"></input>
                                     {errors.verify_user_email && errors.verify_user_email.type === "required" && (
                                         <small className="text-danger">Email is required.</small>
@@ -379,6 +376,8 @@ const LoginModal = ({ id = '', type }) => {
                                 ) : (
                                     "Continue"
                                 )}</button>
+                                 <div className="text-variant-1 auth-line">or sign up with</div>
+
                                 <div className="mt-12 text-variant-1 text-center noti">Already have an account?<a href="#" onClick={(e) => { e.preventDefault(); gotologin() }} className="text-black fw-5">Login Here</a> </div>
                             </form>
                         </div>
@@ -485,14 +484,18 @@ const LoginModal = ({ id = '', type }) => {
                     {/* Forgot Password */}
                     {step == 6 &&
                         <div className="flat-account bg-surface">
-                            <h5 className="title text-center">Forget Password</h5>
+                            <div className="text-center mb-4">
+                                <h6 className="">Forget Password</h6>
+                                <p>Please enter your register email address</p>
+                            </div>
+
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                             <form onSubmit={handleSubmit(onforgetPassord)}>
                                 <fieldset className="box-fieldset">
-                                    <label>Email<span>*</span>:</label>
-                                    <input type='email'  {...register("forget_user_email", { required: true, })} name="forget_user_email" className="form-control style-1"></input>
+
+                                    <input placeholder="Enter email address" type='email'  {...register("forget_user_email", { required: true, })} name="forget_user_email" className="form-control style-1"></input>
                                     {errors.forget_user_email && errors.forget_user_email.type === "required" && (
-                                        <small className="text-danger">Email is required.</small>
+                                        <small className="text-danger">Email address is required.</small>
                                     )}
                                 </fieldset>
                                 <button type="submit" className="tf-btn primary w-100" disabled={showloader}>{showloader ? (

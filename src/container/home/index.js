@@ -348,13 +348,7 @@ const Home = () => {
         </section>
         <section className="flat-section">
             <div className="container">
-                <div className="box-title style-1 wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                    <div className="box-left">
-                        <div className="text-subtitle text-primary">Our Services</div>
-                        <h4 className="mt-4">What We Do?</h4>
-                    </div>
-                    <a href="#" className="btn-view"><span className="text">View All Services</span> <span className="icon icon-arrow-right2"></span> </a>
-                </div>
+               
                 <div className="flat-service wrap-service wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">
                     <div className="box-service hover-btn-view">
                         <div className="icon-box">

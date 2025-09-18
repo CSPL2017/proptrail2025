@@ -39,7 +39,7 @@ const Header = () => {
         }).catch((error) => { })
     }
     return (<>
-        <header className="main-header fixed-header">
+        <header className="main-header fixed-header header-dashboard">
             <div className="header-lower">
                 <div className="row">
                     <div className="col-lg-12">
@@ -82,20 +82,31 @@ const Header = () => {
                                         </ul>
                                     </div>
                                     <div className="flat-bt-top">
-                                        <a className="tf-btn primary" href="#">Submit Property</a>
+                                        <a className="tf-btn primary" href="#">List Property</a>
                                     </div>
                                 </div>
                                 :
                                 <div className="header-account">
-                                    <div className="register">
-                                        <ul className="d-flex">
-                                            <li><a href="/dashboard">Hi {contextValues?.rowUserData?.user_name}</a></li>
-                                        </ul>
+                                        <a href="#" className="box-avatar dropdown-toggle" data-bs-toggle="dropdown">
+                                            <div className="avatar avt-40 round">
+                                                <img src="images/avatar/avt-2.jpg" alt="avt"/>
+                                            </div>
+                                            <p className="name">{contextValues?.rowUserData?.user_name} <span class="icon icon-arr-down"></span></p>
+                                            <div className="dropdown-menu">
+                                                <a className="dropdown-item" href="my-favorites.html">My Properties</a>
+                                                <a className="dropdown-item" href="my-invoices.html">My Invoices</a>
+                                                <a className="dropdown-item" href="my-favorites.html">My Favorites</a>
+                                                <a className="dropdown-item" href="reviews.html">Reviews</a>
+                                                <a className="dropdown-item" href="my-profile.html">My Profile</a>
+                                                <a className="dropdown-item" href="add-property.html">Add Property</a>
+                                                <a className="dropdown-item" href="index.html">Logout</a>
+                                            </div>
+                                        </a>
+                                        <div className="flat-bt-top">
+                                            <a className="tf-btn primary" href="add-property.html">List Property</a>
+                                        </div>  
                                     </div>
-                                    <div className="flat-bt-top">
-                                        <a className="tf-btn primary" href="#">Submit Property</a>
-                                    </div>
-                                </div>
+                            
                             }
                             <div className="mobile-nav-toggler mobile-button"><span></span></div>
                         </div>
