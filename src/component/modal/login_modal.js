@@ -312,7 +312,7 @@ const LoginModal = ({ id = '', type }) => {
                     {step == 1 &&
                         <div className="flat-account bg-surface">
                              <div className="text-center mb-4">
-                                <h6 className="">Sign In</h6>
+                                <h6>Sign In</h6>
                                 <p>Welcome back! Please signin to continue.</p>
                             </div>
                             <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
