@@ -10,6 +10,7 @@ import { ApiService } from "../../component/services/apiservices";
 import Header from "../../component/header";
 import ScenerioModal from "../../component/modal/scenerio_modal";
 import SearchTagModal from "../../component/modal/search_tag_modal";
+import AddAddressModal from "../../component/modal/add_property_address";
 
 const MyProperty = () => {
     const contextValues = useContext(DataContext)
@@ -72,7 +73,7 @@ const MyProperty = () => {
                     setHasmore(true)
                 }, 500)
             } else if (res?.status == "error" && res.message == 'session_expired') {
-                toast.error(res?.data?.message)
+                toast.error(res?.message)
                 localStorage.removeItem("USER_TOKEN")
                 navigate('/')
             }
@@ -163,7 +164,6 @@ const MyProperty = () => {
         const tagvaluearray = []
         if (tagValue?.length > 0) {
             tagValue?.map((item) => { tagvaluearray.push(item.tagValue) })
-            console.log(tagvaluearray, 'tagvaluearray')
             return tagvaluearray?.join(',')
         }
         else {
@@ -176,112 +176,110 @@ const MyProperty = () => {
     return (<>
         <Header />
         <div className="layout-wrap">
-            <div className="main-content">
-                <div className="main-content-inner wrap-dashboard-content">
-                    <div className="row">
-                        <div className={showReset ? 'col-xl-10 col-sm-6' : 'col-xl-12 col-sm-6'}>
-                            <fieldset className="box-fieldset">
-                                <input type="text" className="form-control style-1" placeholder="Search by tag..." onChange={(e) => { handleSearchChange(e); }} value={searchQuery}></input>
-                            </fieldset>
-                        </div> 
-                        {showReset && (
-                            <dv className='col-xl-2'>
-                                <div className="d-flex">
-                                    <button className='tf-btn primary' onClick={() => { reSet() }} >Reset</button>
-                                </div>
-                            </dv>
-                        )}
+            <div className="main-content-inner wrap-dashboard-content">
+                <div className="row">
+                    <div className={showReset ? 'col-xl-10 col-sm-6' : 'col-xl-12 col-sm-6'}>
+                        <fieldset className="box-fieldset">
+                            <input type="text" className="form-control style-1" placeholder="Search by tag..." onChange={(e) => { handleSearchChange(e); }} value={searchQuery}></input>
+                        </fieldset>
                     </div>
-                    <div className="widget-box-2 wd-listing">
-                        <h6 className="title">My Properties</h6>
-                        <button
-                            className="tf-btn primary"
-                            type="button"
-                            name="submit"
-                            onClick={(e) => {
-                                addAddressModal()
-                            }}
-                        >
-                            Add Property
-                        </button>
-                        <div className="wrap-table">
-                            <div className="table-responsive">
-                                {IsLoading ?
-                                    <div className="text-center">
-                                        <Loader></Loader>
-                                    </div>
-                                    :
-                                    myproperties.length > 0 ?
-                                        <InfiniteScroll
-                                            dataLength={myproperties.length}
-                                            next={() => fetchProperties("", searchQuery)}
-                                            hasMore={hasMore}
-                                            loader={<h6>Loading...</h6>}
-                                            style={{ overflow: "hidden !important" }}
-                                        >
-                                            <table className="table table-striped table-bordered text-center">
-                                                <thead className="thead-dark">
-                                                    <tr>
-                                                        <th>Title</th>
-                                                        <th>Equity</th>
-                                                        <th>Net Annual Cashflow</th>
-                                                        <th>Tag</th>
-                                                        <th>Date Published</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {myproperties.length > 0 &&
-                                                        myproperties.map((item, key) => {
-                                                            const date1 = new Date(item.property_data.created_at).toDateString();
-                                                            return (
-                                                                <tr key={key}>
-                                                                    <td>
-                                                                        <div>
-                                                                            <img
-                                                                                src={item?.property_data?.property_image ? property_img_url + item?.property_data?.property_image : '/img/logo.png'}
-                                                                                alt="Property"
-                                                                                className="img-thumbnail me-3"
-                                                                                style={{ width: "80px", height: "auto" }}
-                                                                            />
-                                                                            <div>
-                                                                                <a
-                                                                                    href={`/maintainance/${item?.property_data?._id}`}
-                                                                                    className="fw-bold text-decoration-none"
-                                                                                >
-                                                                                    {item?.property_data?.property_name}
-                                                                                </a>
-                                                                                <div className="text-muted small">{item?.property_data?.property_adress}</div>
-
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>{contextValues.Currency ? contextValues.Currency : '$'}{(item.maintenance_data.equity)?.toFixed(3)}</td>
-                                                                    <td>{contextValues.Currency ? contextValues.Currency : '$'}{(item.maintenance_data.net_annual_cash_flow)?.toFixed(3)}</td>
-                                                                    <td>{getTagValues(item?.property_data?.property_tags)}</td>
-                                                                    <td>{date1}</td>
-
-                                                                    <td>
-                                                                        <div className="d-flex justify-content-center gap-2">
-                                                                            <a href={`/maintainance-edit/${item?.property_data?._id}`} className="btn btn-sm btn-outline-primary">Edit</a>
-                                                                            <a href="javascript:void(0)" className="btn btn-sm btn-outline-danger remove-file" onClick={() => { onDeleteProp(item) }}>Delete</a>
-                                                                            <a href="javascript:void(0)" className="btn btn-sm btn-outline-success remove-file" onClick={() => { navigate(`/createscenerio/${item?.property_data?._id}`) }}>WhatIf</a>
-                                                                            <a href="#scenerioModal" data-bs-toggle="modal" className="btn btn-sm btn-outline-warning remove-file" onClick={() => { scenerioModal(item?.property_data?._id) }} >Scenerios</a>
-                                                                            <a href="#SearchTagModal" data-bs-toggle="modal" className="btn btn-sm btn-outline-secondary remove-file" onClick={() => { tagModal(item?.property_data?._id) }} >Tag</a>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            );
-                                                        })}
-                                                </tbody>
-                                            </table>
-                                        </InfiniteScroll> : <p className="text-center">{' No Property Found'}</p>}
+                    {showReset && (
+                        <dv className='col-xl-2'>
+                            <div className="d-flex">
+                                <button className='tf-btn primary' onClick={() => { reSet() }} >Reset</button>
                             </div>
+                        </dv>
+                    )}
+                </div>
+                <div className="widget-box-2 wd-listing">
+                    <div className="d-flex justify-content-between">
+                    <h6 className="title">My Properties</h6>
+                    <button
+                        className="tf-btn primary"
+                        type="button"
+                        name="submit"
+                        href="#addPropertyAddressModal" data-bs-toggle="modal"
+                    >
+                        Add Property
+                    </button>
+                    </div>
+                    <div className="wrap-table">
+                        <div className="table-responsive">
+                            {IsLoading ?
+                                <div className="text-center">
+                                    <Loader></Loader>
+                                </div>
+                                :
+                                myproperties.length > 0 ?
+                                    <InfiniteScroll
+                                        dataLength={myproperties.length}
+                                        next={() => fetchProperties("", searchQuery)}
+                                        hasMore={hasMore}
+                                        loader={<h6>Loading...</h6>}
+                                        style={{ overflow: "hidden !important" }}
+                                    >
+                                        <table>
+                                            <thead className="thead-dark">
+                                                <tr>
+                                                    <th>Title</th>
+                                                    <th>Equity</th>
+                                                    <th>Net Annual Cashflow</th>
+                                                    <th>Tag</th>
+                                                    <th>Date Published</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {myproperties.length > 0 &&
+                                                    myproperties.map((item, key) => {
+                                                        const date1 = new Date(item.property_data.created_at).toDateString();
+                                                        return (
+                                                            <tr key={key}>
+                                                                <td>
+                                                                    <div>
+                                                                        <img
+                                                                            src={item?.property_data?.property_image ? property_img_url + item?.property_data?.property_image : '/img/logo.png'}
+                                                                            alt="Property"
+                                                                            className="img-thumbnail me-3"
+                                                                            style={{ width: "80px", height: "auto" }}
+                                                                        />
+                                                                        <div>
+                                                                            <a
+                                                                                href={`/maintainance/${item?.property_data?._id}`}
+                                                                                className="fw-bold text-decoration-none"
+                                                                            >
+                                                                                {item?.property_data?.property_name}
+                                                                            </a>
+                                                                            <div className="text-muted small">{item?.property_data?.property_adress}</div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>{contextValues.Currency ? contextValues.Currency : '$'}{(item.maintenance_data.equity)?.toFixed(3)}</td>
+                                                                <td>{contextValues.Currency ? contextValues.Currency : '$'}{(item.maintenance_data.net_annual_cash_flow)?.toFixed(3)}</td>
+                                                                <td>{getTagValues(item?.property_data?.property_tags)}</td>
+                                                                <td>{date1}</td>
+
+                                                                <td>
+                                                                    <div className="d-flex justify-content-center gap-2">
+                                                                        <a href={`/maintainance-edit/${item?.property_data?._id}`} className="btn btn-sm btn-outline-primary">Edit</a>
+                                                                        <a href="javascript:void(0)" className="btn btn-sm btn-outline-danger remove-file" onClick={() => { onDeleteProp(item) }}>Delete</a>
+                                                                        <a href={`/createscenerio/${item?.property_data?._id}`} className="btn btn-sm btn-outline-success remove-file">WhatIf</a>
+                                                                        <a href="#scenerioModal" data-bs-toggle="modal" className="btn btn-sm btn-outline-warning remove-file" onClick={() => { scenerioModal(item?.property_data?._id) }} >Scenerios</a>
+                                                                        <a href="#SearchTagModal" data-bs-toggle="modal" className="btn btn-sm btn-outline-secondary remove-file" onClick={() => { tagModal(item?.property_data?._id) }} >Tag</a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                            </tbody>
+                                        </table>
+                                    </InfiniteScroll> : <p className="text-center">{' No Property Found'}</p>}
                         </div>
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
         <SweetAlert
             warning
             confirmBtnCssClass="alertpop"
@@ -297,8 +295,8 @@ const MyProperty = () => {
         ></SweetAlert>
         <ScenerioModal propertyId={propertyId}></ScenerioModal>
         <SearchTagModal propertyId={propertyId}></SearchTagModal>
-        {/* {contextValues.toggleAddAddress && <AddAddressModal />}
-    {contextValues.toggletrackModal && <PropertyAddress handleClose={handleClose}></PropertyAddress>} */}
+        <AddAddressModal />
+        {/* {contextValues.toggletrackModal && <PropertyAddress handleClose={handleClose}></PropertyAddress>} */}
 
     </>)
 }

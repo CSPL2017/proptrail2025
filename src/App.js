@@ -16,6 +16,8 @@ import { ToastContainer } from 'react-toastify';
 import Dashboard from './container/my_account/dashboard';
 import ProtectedRoute from './component/services/ProtectedRoutes';
 import MyProperty from './container/my_account/properties';
+import MaintainnceTable from './container/property_purchase_forms/maintainence-table';
+import CreateScenerio from './container/property_purchase_forms/create-scenerio';
 
 function App() {
   return (
@@ -26,6 +28,10 @@ function App() {
             <Route exact path='/' element={<Home />} /> 
             <Route exact path='/dashboard' element={<ProtectedRoute element={<Dashboard />} />}/>
             <Route exact path='/my-property' element={<ProtectedRoute element={<MyProperty />} />}/>
+
+            <Route exact path='/maintainance/:id' activeClassName="active" element={<ProtectedRoute element={<MaintainnceTable />} />}/>
+            <Route exact path='/maintainance-edit/:id' activeClassName="active" element={<ProtectedRoute element={<MaintainnceTable />} />}/>
+            <Route exact path='/createscenerio/:id' activeClassName="active" element={<ProtectedRoute element={<CreateScenerio />} />}/>
             <Route exact path='/about-us' element={<AboutUs />} /> 
             <Route exact path='/contact-us' element={<ContactUs />} /> 
             <Route exact path='/features' element={<Features />} /> 

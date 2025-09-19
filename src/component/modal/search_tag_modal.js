@@ -1,18 +1,13 @@
-import { useContext, useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { ApiService } from '../services/apiservices';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import DataContext from '../elements/context';
+import SpinnerLoader from '../utils/loader';
 function SearchTagModal({ propertyId }) {
     const navigate = useNavigate()
-    const contextValues = useContext(DataContext)
-    const didMountRef = useRef(true)
     const [showloader, setshowloader] = useState(false);
-    const [tagName, setTagName] = useState();
     const [errormsg, seterrormsg] = useState('');
     const [errorvaluemsg, seterrorvaluemsg] = useState('');
-    const [tagNameOther, setTagNameOther] = useState();
-    const [tagValue, setTagValue] = useState();
 
     const [tags, setTags] = useState([{ tagName: '', tagValue: '', tagNameOther: '' }]);
 
@@ -33,16 +28,6 @@ function SearchTagModal({ propertyId }) {
             };
         }
     }, [propertyId]);
-    /*  useEffect(() => {
-         if (didMountRef.current) {
-             getPropertydata()
-         }
-         didMountRef.current = false;
-     }, []); */
-
-    const tagModal = () => {
-        contextValues.setToggleSearchTag(!contextValues.toggleSearchTag)
-    }
 
     const savePropertyTag = () => {
         setshowloader(true);
@@ -89,7 +74,6 @@ function SearchTagModal({ propertyId }) {
                 navigate('/');
             } else {
                 toast.error(res.message);
-                tagModal();
             }
         }).catch((error) => {
             setshowloader(false);
@@ -102,8 +86,9 @@ function SearchTagModal({ propertyId }) {
         const dataString = {
             property_id: propertyId
         }
+        setshowloader(true)
         ApiService.postData('/property/getpropertyaddressdata', dataString).then((res) => {
-            if (res.status == 'success') {
+            if (res.status === 'success') {
                 if (Array.isArray(res.property.property_tags)) {
                     const formattedTags = res.property.property_tags.length > 0 ? res.property.property_tags.map(tag => ({
                         tagName: tag.tagName,
@@ -114,7 +99,7 @@ function SearchTagModal({ propertyId }) {
 
                     setTags(formattedTags);
                 }
-
+                setshowloader(false)
             }
         })
     }
@@ -140,60 +125,63 @@ function SearchTagModal({ propertyId }) {
     };
 
     return (<>
+        {showloader && <SpinnerLoader />}
         <div className="modal fade" id="SearchTagModal">
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="flat-account bg-surface">
                         <span className="close-modal icon-close2" data-bs-dismiss="modal"></span>
                         <div className="container">
-                            <div className="row g-3 p-3">
+                            <div className="row">
                                 {tags.map((tag, index) => (
-                                    <div className="form-group" key={index}>
-                                        <select
-                                            name="tag_name"
-                                            className="custom-select"
-                                            value={tag.tagName}
-                                            onChange={(e) => handleTagChange(e, index, 'tagName')}
-                                        >
-                                            <option value="">Select Tag Name</option>
-                                            <option value="Name">Name</option>
-                                            <option value="Location">Location</option>
-                                            <option value="ClientName">Client Name</option>
-                                            <option value="ClientId">Client Id</option>
-                                            <option value="Other">Other</option>
-                                        </select>
-                                        {errormsg && !tag.tagName && <span className="text-danger">{errormsg}</span>}
+                                    <>
+                                        <div className="form-group" key={index}>
+                                            <select
+                                                name="tag_name"
+                                                className="custom-select"
+                                                value={tag.tagName}
+                                                onChange={(e) => handleTagChange(e, index, 'tagName')}
+                                            >
+                                                <option value="">Select Tag Name</option>
+                                                <option value="Name">Name</option>
+                                                <option value="Location">Location</option>
+                                                <option value="ClientName">Client Name</option>
+                                                <option value="ClientId">Client Id</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            {errormsg && !tag.tagName && <span className="text-danger">{errormsg}</span>}
 
-                                        {tag.tagName === 'Other' && (
+                                            {tag.tagName === 'Other' && (
+                                                <div className="form-group">
+                                                    <input
+                                                        name="tag_name"
+                                                        value={tag.tagNameOther}
+                                                        onChange={(e) => handleTagChange(e, index, 'tagNameOther')}
+                                                        placeholder="Enter other tag name"
+                                                    />
+                                                    {errormsg && tag.tagName && !tag.tagNameOther && (
+                                                        <span className="text-danger">{errormsg}</span>
+                                                    )}
+                                                </div>
+                                            )}
+
                                             <div className="form-group">
                                                 <input
-                                                    name="tag_name"
-                                                    value={tag.tagNameOther}
-                                                    onChange={(e) => handleTagChange(e, index, 'tagNameOther')}
-                                                    placeholder="Enter other tag name"
+                                                    name="tag_value"
+                                                    value={tag.tagValue}
+                                                    onChange={(e) => handleTagChange(e, index, 'tagValue')}
+                                                    placeholder="Enter tag value"
                                                 />
-                                                {errormsg && tag.tagName && !tag.tagNameOther && (
-                                                    <span className="text-danger">{errormsg}</span>
-                                                )}
+                                                {errorvaluemsg && !tag.tagValue && <span className="text-danger">{errorvaluemsg}</span>}
+
+
                                             </div>
-                                        )}
 
-                                        <div className="form-group">
-                                            <input
-                                                name="tag_value"
-                                                value={tag.tagValue}
-                                                onChange={(e) => handleTagChange(e, index, 'tagValue')}
-                                                placeholder="Enter tag value"
-                                            />
-                                            {errorvaluemsg && !tag.tagValue && <span className="text-danger">{errorvaluemsg}</span>}
-
-
+                                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                <i className="ri-delete-bin-line fs-6" style={{ color: 'red' }} onClick={() => removeTag(index)}></i>
+                                            </div>
                                         </div>
-
-                                        <div style={{ display: 'flex', justifyContent: 'end' }}>
-                                            <i className="ri-delete-bin-line fs-6" style={{ color: 'red' }} onClick={() => removeTag(index)}></i>
-                                        </div>
-                                    </div>
+                                    </>
                                 ))}
                                 {tags.length < 3 && <div className="formgroup mb-20">
                                     <button

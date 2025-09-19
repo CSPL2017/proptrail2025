@@ -104,7 +104,7 @@ const Header = () => {
                                 <div className="header-account">
                                     <a href="#" className="box-avatar dropdown-toggle" data-bs-toggle="dropdown">
                                         <div className="avatar avt-40 round">
-                                            <img src="images/avatar/avt-2.png" alt="avt" />
+                                            <img src="/images/avatar/avt-2.png" alt="avt" />
                                         </div>
                                         <p className="name">{contextValues?.rowUserData?.user_name} <span class="icon icon-arr-down"></span></p>
                                         <div className="dropdown-menu">

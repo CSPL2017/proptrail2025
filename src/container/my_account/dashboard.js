@@ -133,92 +133,90 @@ const Dashboard = () => {
     return (<>
         <div className="layout-wrap">
             <Header />
-            
-            <div className="main-content">
-                <div className="main-content-inner">
-                    <div className="widget-box-2">
-                        <h6 className="title">Dashboard</h6>
-                        <div className="row g-3 justify-content-center mb-4">
-                            {[
-                                { title: "Current Number of Properties", value: dashboardData?.propertyCount, icon: "/img/home.png" },
-                                {
-                                    title: "Current Total Portfolio Value",
-                                    value: `${contextValues.Currency ? contextValues.Currency : '$'}${dashboardData?.totalValue?.totalpropertyvalue?.toLocaleString()}`,
-                                    icon: "/img/chart.png"
-                                },
-                                { title: "Current Total Debt", value: `${contextValues.Currency ? contextValues.Currency : '$'}${dashboardData?.totalValue?.totalloanamount?.toLocaleString()}`, icon: "/img/coin.png" },
-                                { title: "Current Total Equity", value: `${contextValues.Currency ? contextValues.Currency : '$'}${dashboardData?.totalValue?.totalequity?.toLocaleString()}`, icon: "/img/chart.png" }
-                            ]
-                                .map((item, index) => (
-                                    <div key={index} className="col-6 col-sm-4 col-md-3 d-flex flex-column align-items-center" onClick={() => { navigate('/my-property') }}>
-                                        <div
-                                            className="counter-box d-flex flex-column justify-content-center align-items-center"
-                                            style={{
-                                                borderRadius: "50%",
-                                                width: "130px",
-                                                height: "130px",
-                                                backgroundColor: "#f9f9f9",
-                                                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                                                textAlign: "center",
-                                                padding: "10px",
-                                            }}
-                                        >
-                                            <img src={item.icon} alt={item.title} width="30px" />
-                                            <div style={{ marginTop: "10px", color: "#daa028", fontWeight: "bold" }}>
-                                                <span style={{ fontSize: "12px" }}>{item.title}</span>
-                                            </div>
-                                            <h6 className="number mt-2" style={{ color: "#672d5f", fontWeight: "bold" }}>
-                                                {item.value || "0"}
-                                            </h6>
+
+            <div className="main-content-inner">
+                <div className="widget-box-2">
+                    <h6 className="title">Dashboard</h6>
+                    <div className="row g-3 justify-content-center mb-4">
+                        {[
+                            { title: "Current Number of Properties", value: dashboardData?.propertyCount, icon: "/img/home.png" },
+                            {
+                                title: "Current Total Portfolio Value",
+                                value: `${contextValues.Currency ? contextValues.Currency : '$'}${dashboardData?.totalValue?.totalpropertyvalue?.toLocaleString()}`,
+                                icon: "/img/chart.png"
+                            },
+                            { title: "Current Total Debt", value: `${contextValues.Currency ? contextValues.Currency : '$'}${dashboardData?.totalValue?.totalloanamount?.toLocaleString()}`, icon: "/img/coin.png" },
+                            { title: "Current Total Equity", value: `${contextValues.Currency ? contextValues.Currency : '$'}${dashboardData?.totalValue?.totalequity?.toLocaleString()}`, icon: "/img/chart.png" }
+                        ]
+                            .map((item, index) => (
+                                <div key={index} className="col-6 col-sm-4 col-md-3 d-flex flex-column align-items-center" onClick={() => { navigate('/my-property') }}>
+                                    <div
+                                        className="counter-box d-flex flex-column justify-content-center align-items-center"
+                                        style={{
+                                            borderRadius: "50%",
+                                            width: "130px",
+                                            height: "130px",
+                                            backgroundColor: "#f9f9f9",
+                                            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                                            textAlign: "center",
+                                            padding: "10px",
+                                        }}
+                                    >
+                                        <img src={item.icon} alt={item.title} width="30px" />
+                                        <div style={{ marginTop: "10px", color: "#daa028", fontWeight: "bold" }}>
+                                            <span style={{ fontSize: "12px" }}>{item.title}</span>
                                         </div>
+                                        <h6 className="number mt-2" style={{ color: "#672d5f", fontWeight: "bold" }}>
+                                            {item.value || "0"}
+                                        </h6>
                                     </div>
-                                ))}
-                        </div>
-
-                        {/* Gauge Chart and Line Chart Section */}
-                        <div className="row g-3">
-                            {getDebtEquityText() !== '' && <p className="text-danger text-end p-0 mb-0 fw-bold">{getDebtEquityText()}</p>}
-                            <div className="col-12 col-md-8">
-                                <Chart
-                                    chartType="LineChart"
-                                    width="100%"
-                                    height="300px"
-                                    data={data}
-                                    options={generateGraphOptions("Net Annual Cashflow")}
-                                />
-                            </div>
-                            <div className="col-12 col-md-4 d-flex justify-content-center">
-                                <div>
-                                    <GaugeComponent
-                                        value={gaugechartvalue}
-                                        type="radial"
-                                        labels={{
-                                            tickLabels: {
-                                                type: "inner",
-                                                ticks: [
-                                                    { value: 80 },
-                                                    { value: 90 },
-                                                ],
-                                            },
-                                        }}
-                                        arc={{
-                                            colorArray: ["green", "orange", "red"],
-                                            subArcs: [
-                                                { limit: 80, color: "#5BE12C" },
-                                                { limit: 90, color: "#F5CD19" },
-                                                { color: "#EA4228" },
-                                            ],
-                                            padding: 0.02,
-                                            width: 0.2,
-                                        }}
-                                        pointer={{
-                                            elastic: true,
-                                            animationDelay: 0,
-                                        }}
-                                    />
-                                    <h6 className="text-center">Debt To Equity Ratio</h6>
-
                                 </div>
+                            ))}
+                    </div>
+
+                    {/* Gauge Chart and Line Chart Section */}
+                    <div className="row g-3">
+                        {getDebtEquityText() !== '' && <p className="text-danger text-end p-0 mb-0 fw-bold">{getDebtEquityText()}</p>}
+                        <div className="col-12 col-md-8">
+                            <Chart
+                                chartType="LineChart"
+                                width="100%"
+                                height="300px"
+                                data={data}
+                                options={generateGraphOptions("Net Annual Cashflow")}
+                            />
+                        </div>
+                        <div className="col-12 col-md-4 d-flex justify-content-center">
+                            <div>
+                                <GaugeComponent
+                                    value={gaugechartvalue}
+                                    type="radial"
+                                    labels={{
+                                        tickLabels: {
+                                            type: "inner",
+                                            ticks: [
+                                                { value: 80 },
+                                                { value: 90 },
+                                            ],
+                                        },
+                                    }}
+                                    arc={{
+                                        colorArray: ["green", "orange", "red"],
+                                        subArcs: [
+                                            { limit: 80, color: "#5BE12C" },
+                                            { limit: 90, color: "#F5CD19" },
+                                            { color: "#EA4228" },
+                                        ],
+                                        padding: 0.02,
+                                        width: 0.2,
+                                    }}
+                                    pointer={{
+                                        elastic: true,
+                                        animationDelay: 0,
+                                    }}
+                                />
+                                <h6 className="text-center">Debt To Equity Ratio</h6>
+
                             </div>
                         </div>
                     </div>
