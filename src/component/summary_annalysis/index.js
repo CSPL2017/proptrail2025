@@ -17,19 +17,18 @@ const Summary = () => {
     } = useForm();
     useEffect(() => {
         if (didMountRef.current) {
-            // setshowloader(true)
-            const datastring = {
+            setshowloader(true)
+            const dataString = {
                 id: id
             };
-            apiServices.getsavedmaintainancetabledatarequest(datastring).then((res) => {
-                if (res?.data?.status == "success") {
-                    const maintainancedata = res.data.maintainaancedata?.maintainance_table_data
+            ApiService.postData('property/getsavedmaintainancetabledata', dataString).then((res) => {
+                if (res.status == "success") {
+                    const maintainancedata = res.maintainaancedata?.maintainance_table_data
                     setmaintainncetableData(maintainancedata);
-                    setstrategyData(res.data.strategy)
-                    setmaintainnceData(res?.data?.maintainaancedata)
+                    setstrategyData(res.strategy)
+                    setmaintainnceData(res.maintainaancedata)
                     setshowloader(false)
-                }
-                else {
+                } else {
                     setshowloader(false)
                 }
             })

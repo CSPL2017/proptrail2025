@@ -13,7 +13,6 @@ function MaintainnceTable() {
   const [maintainncetableData, setmaintainncetableData] = useState([]);
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [showtable, setshowtable] = useState("summary")
-  const [show, setShow] = useState(false);
   const [showactionbtns, setshowactionbtns] = useState(false);
   const [showinputs, setshowinputs] = useState({})
   const [selectedObject, setselectObject] = useState({})
@@ -27,10 +26,20 @@ function MaintainnceTable() {
   const navigate = useNavigate()
   const tableRef = useRef(null);
   const handleClose = () => {
-    setShow(false);
-    return
+    const modalEl = document.getElementById("actualReadingsModal");
+    if (modalEl && window.bootstrap) {
+      const modal = window.bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+    }
   };
-  const handleShow = () => setShow(true);
+
+  const handleShow = () => {
+    const modalEl = document.getElementById("actualReadingsModal");
+    if (modalEl && window.bootstrap) {
+      const modal = new window.bootstrap.Modal(modalEl);
+      modal.show();
+    }
+  };
 
   useEffect(() => {
     if (didMountRef.current) {
@@ -156,7 +165,6 @@ function MaintainnceTable() {
     const selectedObject = maintainncetableData[index];
     setselectObject(selectedObject);
     setSelectedRowIndex(index);
-    // seteditclickstate(true)
     handleShow();
   };
 
@@ -642,11 +650,15 @@ function MaintainnceTable() {
                                     <td>{item.growth_assump + "%"}</td>
                                     <td>{item.rental_growth + "%"}</td>
                                     <td>{item.inflation + "%"}</td>
-                                    <td><i className="icon icon-edit" onClick={(e) => { handleEditClick(index) }}></i></td>
-                                    {showactionbtns[index] ? <>
-                                      <td><i className="icon icon-check" onClick={(e) => { submitMainatianancedata(index) }}></i></td>
-                                      <td><i className="icon icon-refresh fs-4 text-secondary" onClick={() => handleResetChanges(index)}></i></td>
-                                    </> : ""}
+                                    <td>
+                                      <div className="d-flex justify-content-center gap-2">
+                                        <a href="#" className="btn btn-sm btn-outline-primary" onClick={(e) => { e.preventDefault(); handleEditClick(index) }}><i className="ri-pencil-fill"></i></a>
+                                        {showactionbtns[index] ? <>
+                                          <a href="#" className="btn btn-sm btn-outline-success" onClick={(e) => { e.preventDefault(); submitMainatianancedata(index) }}><i className="ri-checkbox-circle-fill"></i></a>
+                                          <a href="#" className="btn btn-sm btn-outline-warning" onClick={(e) => { e.preventDefault(); handleResetChanges(index) }} ><i className="ri-refresh-line"></i></a>
+                                        </> : ""}
+                                      </div>
+                                    </td>
                                   </tr>
                                 </>)
                               })}
@@ -685,11 +697,15 @@ function MaintainnceTable() {
                                     <td>{(items?.owner_occupied_week)?.toLocaleString()}</td>
                                     <td>{contextValues.Currency ? contextValues.Currency : '$'}{(items?.owner_rental_saved)?.toLocaleString()}</td>
                                     <td>{contextValues.Currency ? contextValues.Currency : '$'}{(items?.adjusted_income)?.toLocaleString()}</td>
-                                    <td><i className="icon icon-edit" onClick={(e) => { handleEditClick(index) }}></i></td>
-                                    {showactionbtns[index] ? <>
-                                      <td><i className="icon icon-check" onClick={(e) => { submitMainatianancedata(index) }}></i></td>
-                                      <td><i className="icon icon-refresh fs-4 text-secondary" onClick={() => handleResetChanges(index)}></i></td>
-                                    </> : ""}
+                                    <td>
+                                      <div className="d-flex justify-content-center gap-2">
+                                        <a href="#" className="btn btn-sm btn-outline-primary" onClick={(e) => { e.preventDefault(); handleEditClick(index) }}><i className="ri-pencil-fill"></i></a>
+                                        {showactionbtns[index] ? <>
+                                          <a href="#" className="btn btn-sm btn-outline-success" onClick={(e) => { e.preventDefault(); submitMainatianancedata(index) }}><i className="ri-checkbox-circle-fill"></i></a>
+                                          <a href="#" className="btn btn-sm btn-outline-warning" onClick={(e) => { e.preventDefault(); handleResetChanges(index) }} ><i className="ri-refresh-line"></i></a>
+                                        </> : ""}
+                                      </div>
+                                    </td>
                                   </tr>
                                 </>)
                               })}
@@ -725,7 +741,7 @@ function MaintainnceTable() {
                                 <th>Principal Payments Fixed</th>
                                 <th>Principal Payments Variable</th>
                                 <th>Principal Payments</th>
-                                <th>Forcast Annual Non-deductable Expenses</th> 
+                                <th>Forcast Annual Non-deductable Expenses</th>
                                 <th>Potential annual net cash outflow</th>
                                 <th>Action</th>
                               </tr>
@@ -762,11 +778,15 @@ function MaintainnceTable() {
                                     <td>{contextValues.Currency ? contextValues.Currency : '$'}{(items?.principal_pay)?.toLocaleString()}</td>
                                     <td>{contextValues.Currency ? contextValues.Currency : '$'}{(items?.forcast_annual_non_deductexpe)?.toLocaleString()}</td>
                                     <td>{contextValues.Currency ? contextValues.Currency : '$'}{(items?.potential_annual_net_cash_outflow)?.toLocaleString()}</td>
-                                    <td><i className="icon icon-edit" onClick={(e) => { handleEditClick(index) }}></i></td>
-                                    {showactionbtns[index] ? <>
-                                      <td><i className="icon icon-check" onClick={(e) => { submitMainatianancedata(index) }}></i></td>
-                                      <td><i className="icon icon-refresh fs-4 text-secondary" onClick={() => handleResetChanges(index)}></i></td>
-                                    </> : ""}
+                                    <td>
+                                      <div className="d-flex justify-content-center gap-2">
+                                        <a href="#" className="btn btn-sm btn-outline-primary" onClick={(e) => { e.preventDefault(); handleEditClick(index) }}><i className="ri-pencil-fill"></i></a>
+                                        {showactionbtns[index] ? <>
+                                          <a href="#" className="btn btn-sm btn-outline-success" onClick={(e) => { e.preventDefault(); submitMainatianancedata(index) }}><i className="ri-checkbox-circle-fill"></i></a>
+                                          <a href="#" className="btn btn-sm btn-outline-warning" onClick={(e) => { e.preventDefault(); handleResetChanges(index) }} ><i className="ri-refresh-line"></i></a>
+                                        </> : ""}
+                                      </div>
+                                    </td>
                                   </tr>
                                 </>)
                               })}
@@ -977,11 +997,15 @@ function MaintainnceTable() {
                                     <td>{contextValues.Currency ? contextValues.Currency : '$'}{(items?.total_performance_principal)?.toLocaleString()}</td>
                                     <td>{(items?.cash_on_cash_return)?.toLocaleString()}</td>
                                     <td>{(items?.return_interest_capital)?.toLocaleString()}</td>
-                                    <td><i className="icon icon-edit" onClick={(e) => { handleEditClick(index) }}></i></td>
-                                    {showactionbtns[index] ? <>
-                                      <td><i className="icon icon-check" onClick={(e) => { submitMainatianancedata(index) }}></i></td>
-                                      <td><i className="icon icon-refresh fs-4 text-secondary" onClick={() => handleResetChanges(index)}></i></td>
-                                    </> : ""}
+                                    <td>
+                                      <div className="d-flex justify-content-center gap-2">
+                                        <a href="#" className="btn btn-sm btn-outline-primary" onClick={(e) => { e.preventDefault(); handleEditClick(index) }}><i className="ri-pencil-fill"></i></a>
+                                        {showactionbtns[index] ? <>
+                                          <a href="#" className="btn btn-sm btn-outline-success" onClick={(e) => { e.preventDefault(); submitMainatianancedata(index) }}><i className="ri-checkbox-circle-fill"></i></a>
+                                          <a href="#" className="btn btn-sm btn-outline-warning" onClick={(e) => { e.preventDefault(); handleResetChanges(index) }} ><i className="ri-refresh-line"></i></a>
+                                        </> : ""}
+                                      </div>
+                                    </td>
                                   </tr>
                                 </>)
                               })}
@@ -991,8 +1015,8 @@ function MaintainnceTable() {
                           <Summary></Summary>
                         }
                       </div>
-                    </> 
-                    :
+                    </>
+                      :
                       <div className="text-center">
                         No Data Found
                       </div>
@@ -1003,7 +1027,7 @@ function MaintainnceTable() {
             </div>
           </div>
         </div>
-        <div className="modal fade" id="maintainnceTableModal">
+        <div className="modal fade" id="actualReadingsModal">
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="flat-account bg-surface">

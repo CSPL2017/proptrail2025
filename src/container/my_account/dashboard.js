@@ -131,9 +131,8 @@ const Dashboard = () => {
 
     }
     return (<>
+        <Header />
         <div className="layout-wrap">
-            <Header />
-
             <div className="main-content-inner">
                 <div className="widget-box-2">
                     <h6 className="title">Dashboard</h6>

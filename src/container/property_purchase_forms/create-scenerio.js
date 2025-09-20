@@ -881,7 +881,7 @@ const CreateScenerio = () => {
                         {showsubmit && (
                             <div className="col-3">
                                 <button
-                                    className="btn btn-primary btn-md"
+                                    className="tf-btn primary"
                                     type="button"
                                     name="submit"
                                     disabled={showloader}

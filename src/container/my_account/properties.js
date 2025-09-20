@@ -193,15 +193,15 @@ const MyProperty = () => {
                 </div>
                 <div className="widget-box-2 wd-listing">
                     <div className="d-flex justify-content-between">
-                    <h6 className="title">My Properties</h6>
-                    <button
-                        className="tf-btn primary"
-                        type="button"
-                        name="submit"
-                        href="#addPropertyAddressModal" data-bs-toggle="modal"
-                    >
-                        Add Property
-                    </button>
+                        <h6 className="title">My Properties</h6>
+                        <button
+                            className="tf-btn primary"
+                            type="button"
+                            name="submit"
+                            href="#addPropertyAddressModal" data-bs-toggle="modal"
+                        >
+                            Add Property
+                        </button>
                     </div>
                     <div className="wrap-table">
                         <div className="table-responsive">
@@ -262,8 +262,8 @@ const MyProperty = () => {
 
                                                                 <td>
                                                                     <div className="d-flex justify-content-center gap-2">
-                                                                        <a href={`/maintainance-edit/${item?.property_data?._id}`} className="btn btn-sm btn-outline-primary">Edit</a>
-                                                                        <a href="javascript:void(0)" className="btn btn-sm btn-outline-danger remove-file" onClick={() => { onDeleteProp(item) }}>Delete</a>
+                                                                        <a href={`/maintainance-edit/${item?.property_data?._id}`} className="btn btn-sm btn-outline-primary"><i className="ri-pencil-fill"></i></a>
+                                                                        <a href="javascript:void(0)" className="btn btn-sm btn-outline-danger remove-file" onClick={() => { onDeleteProp(item) }}><i className="ri-delete-bin-fill"></i></a>
                                                                         <a href={`/createscenerio/${item?.property_data?._id}`} className="btn btn-sm btn-outline-success remove-file">WhatIf</a>
                                                                         <a href="#scenerioModal" data-bs-toggle="modal" className="btn btn-sm btn-outline-warning remove-file" onClick={() => { scenerioModal(item?.property_data?._id) }} >Scenerios</a>
                                                                         <a href="#SearchTagModal" data-bs-toggle="modal" className="btn btn-sm btn-outline-secondary remove-file" onClick={() => { tagModal(item?.property_data?._id) }} >Tag</a>
@@ -296,8 +296,6 @@ const MyProperty = () => {
         <ScenerioModal propertyId={propertyId}></ScenerioModal>
         <SearchTagModal propertyId={propertyId}></SearchTagModal>
         <AddAddressModal />
-        {/* {contextValues.toggletrackModal && <PropertyAddress handleClose={handleClose}></PropertyAddress>} */}
-
     </>)
 }
 

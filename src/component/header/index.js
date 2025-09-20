@@ -77,9 +77,9 @@ const Header = () => {
                                             <li className={isActive("/features")}><a href="/features">Features</a></li>
                                             <li className={isActive("/solution")}><a href="/solution">Solution</a></li>
                                             <li className={isActive("/pricing")}><a href="/pricing">Pricing</a></li>
-                                            <li className={`dropdown2 ${pathname === "/blog-list" ? "current" : ""}`}><a href="#">Resources</a>
+                                            <li className={`dropdown2 ${pathname === "/news-blogs" ? "current" : ""}`}><a href="#">Resources</a>
                                                 <ul>
-                                                    <li><a href="/blog-list">Blogs</a></li>
+                                                    <li><a href="/news-blogs">Blogs</a></li>
                                                 </ul>
                                             </li>
                                             <li className={isActive("/contact-us")}><a href="/contact-us">Contact Us</a></li>

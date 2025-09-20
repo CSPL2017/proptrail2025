@@ -114,7 +114,7 @@ const ScenerioSummary = ({ scenerioTable }) => {
             (items?.capital_growth_annual_cummulative) / index,
         ])),
     ];
-    
+
     function findFirstYearAbove100(data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i].return_interest_capital >= 100) {
@@ -124,141 +124,119 @@ const ScenerioSummary = ({ scenerioTable }) => {
         return null;
     }
     return (<>
-        <div className="container">
-            <div className="row">
-                {showloader && <Loader></Loader>}
-                <div>
-                    <table>
-                        <thead>
-                            <th>Strategy comparision</th>
-                            <th>Years</th>
-                            <th>Outcome</th>
-
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>You would be able to achieve your equity target of $  </td>
-                                <td> 4 years</td>
-                                <td>You will be able to meet your target with this property </td>
-                            </tr>
-                            <tr>
-                                <td>You would be able to achieve your equity target of $ </td>
-                                <td> 4 years</td>
-                                <td>You will be able to meet your target with this property </td>
-                            </tr>
-                        </tbody>
-
-
-                    </table>
-                </div>
-                <div className="col-5">
-                    <table>
-                        <thead>
-                            <tr>Performance Assumption</tr>
-                            <tr>
-                                <th>Total performance (growth + net cashflow )</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {scenerioTableData.map((data, index) => {
-                                if ((index) % 5 === 0) {
-                                    return (
-                                        <tr key={index}>
-                                            <td>Year {data?.currentYear}</td>
-                                            <td>{(data?.total_performance_principal).toFixed(2)}</td>
-                                        </tr>
-                                    );
-                                } else {
-                                    return null;
-                                }
-                            })}
-
-                        </tbody>
-                        <thead>
-                            <tr>
-                                <th>Return on Invested Capital</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {scenerioTableData.map((data, index) => {
-
-                                if ((index) % 5 === 0) {
-                                    return (
-                                        <tr key={index}>
-                                            <td>Year {data?.currentYear}</td>
-                                            <td>{(data?.return_interest_capital)?.toFixed(2)}%</td>
-
-                                        </tr>
-                                    );
-                                } else {
-                                    return null;
-                                }
-                            })}
-
-                        </tbody>
-                        <thead>
-                            <tr>
-                                <th>Initial Capital return in </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>{findFirstYearAbove100(scenerioTableData)} years</tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div className="col-7">
-                    {/* <Chart
-                        chartType="LineChart"
-                        width="100%"
-                        height="400px"
-                        data={performancedata}
-                        options={generateGraphOptions('total performance inc pr , capital growth (cummulative) , Net annual cashflow (cummulative) ,total principal payment (cummulative)')}
-                    />
-                    <p>Total performance Graph</p> */}
-                    <Chart
-                        chartType="LineChart"
-                        width="100%"
-                        height="400px"
-                        data={data}
-                        options={generateGraphOptions('Net Annual Cashflow')}
-                    />
-                    <p>Net annual cashflow</p>
-                    <Chart
-                        chartType="LineChart"
-                        width="100%"
-                        height="400px"
-                        data={yielddata}
-                        options={generateGraphOptions('yeilds')}
-                    />
-                    <p>Yeilds</p>
-                    <Chart
-                        chartType="LineChart"
-                        width="100%"
-                        height="400px"
-                        data={totalgrowthdata}
-                        options={generateGraphOptions('Total Growth')}
-                    />
-                    <p>Total Growth</p>
-                    <Chart
-                        chartType="AreaChart"
-                        width="100%"
-                        height="400px"
-                        data={averagegrowthdata}
-                        options={generateGraphOptions('Average Growth')}
-                    />
-                    <Chart
-                        chartType="AreaChart"
-                        width="100%"
-                        height="400px"
-                        data={equitydata}
-                        options={generateGraphOptions('Equity Projection')}
-                    />
-                </div>
+        {showloader && <Loader></Loader>}
+        <table>
+            <thead className="thead-dark">
+                <tr>
+                    <th>Strategy comparision</th>
+                    <th>Years</th>
+                    <th>Outcome</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>You would be able to achieve your equity target of $  </td>
+                    <td> 4 years</td>
+                    <td>You will be able to meet your target with this property </td>
+                </tr>
+                <tr>
+                    <td>You would be able to achieve your equity target of $ </td>
+                    <td> 4 years</td>
+                    <td>You will be able to meet your target with this property </td>
+                </tr>
+            </tbody>
+        </table>
+        <div className="row">
+            <div className="col-5">
+                <table>
+                    <thead className="thead-dark">
+                        <tr><th colSpan={2} className="text-center">Performance Assumption</th></tr>
+                        <tr><th colSpan={2} className="text-center">Total performance (growth + net cashflow )</th></tr>
+                    </thead>
+                    <tbody>
+                        {scenerioTableData.map((data, index) => {
+                            if ((index) % 5 === 0) {
+                                return (
+                                    <tr key={index}>
+                                        <td>Year {data?.currentYear}</td>
+                                        <td>{(data?.total_performance_principal).toFixed(2)}</td>
+                                    </tr>
+                                );
+                            } else {
+                                return null;
+                            }
+                        })}
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th colSpan={2} className="text-center">Return on Invested Capital</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {scenerioTableData.map((data, index) => {
+                            if ((index) % 5 === 0) {
+                                return (
+                                    <tr key={index}>
+                                        <td>Year {data?.currentYear}</td>
+                                        <td>{(data?.return_interest_capital)?.toFixed(2)}%</td>
+                                    </tr>
+                                );
+                            } else {
+                                return null;
+                            }
+                        })}
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th colSpan={2} className="text-center">Initial Capital return in </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>{findFirstYearAbove100(scenerioTableData)} years</tr>
+                    </tbody>
+                </table>
             </div>
-
+            <div className="col-7">
+                <Chart
+                    chartType="LineChart"
+                    width="100%"
+                    height="400px"
+                    data={data}
+                    options={generateGraphOptions('Net Annual Cashflow')}
+                />
+                <p>Net annual cashflow</p>
+                <Chart
+                    chartType="LineChart"
+                    width="100%"
+                    height="400px"
+                    data={yielddata}
+                    options={generateGraphOptions('yeilds')}
+                />
+                <p>Yeilds</p>
+                <Chart
+                    chartType="LineChart"
+                    width="100%"
+                    height="400px"
+                    data={totalgrowthdata}
+                    options={generateGraphOptions('Total Growth')}
+                />
+                <p>Total Growth</p>
+                <Chart
+                    chartType="AreaChart"
+                    width="100%"
+                    height="400px"
+                    data={averagegrowthdata}
+                    options={generateGraphOptions('Average Growth')}
+                />
+                <Chart
+                    chartType="AreaChart"
+                    width="100%"
+                    height="400px"
+                    data={equitydata}
+                    options={generateGraphOptions('Equity Projection')}
+                />
+            </div>
         </div>
-
-
     </>)
 }
 

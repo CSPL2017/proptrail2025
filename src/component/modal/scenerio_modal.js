@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { ApiService } from '../services/apiservices';
 import SpinnerLoader from '../utils/loader';
 function ScenerioModal({ propertyId }) {
-
     const navigate = useNavigate()
     const [isLoader, setIsLoader] = useState(false);
     const [scenerioList, setScenerioList] = useState([]);
@@ -30,16 +29,13 @@ function ScenerioModal({ propertyId }) {
 
     useEffect(() => {
         const modalEl = document.getElementById("scenerioModal");
-
         if (modalEl) {
             const handleShow = () => {
                 if (propertyId) {
                     getScenerioListData(propertyId);
                 }
             };
-
             modalEl.addEventListener("shown.bs.modal", handleShow);
-
             return () => {
                 modalEl.removeEventListener("shown.bs.modal", handleShow);
             };
@@ -47,9 +43,9 @@ function ScenerioModal({ propertyId }) {
     }, [propertyId]);
 
     return (<>
-        {isLoader && <SpinnerLoader/>}
+        {isLoader && <SpinnerLoader />}
         <div className="modal fade" id="scenerioModal">
-            <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-dialog modal-lg modal-dialog-centered">
                 <div className="modal-content">
                     <div className="flat-account bg-surface">
                         <div className="text-center mb-4">
